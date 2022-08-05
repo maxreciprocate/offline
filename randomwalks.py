@@ -1,5 +1,7 @@
+from ast import walk
 import numpy as np
 import torch as th
+from torch import tensor
 import networkx as nx
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
@@ -9,6 +11,15 @@ def randexclude(rng: np.random.RandomState, n: int, exclude: int) -> int:
         x = rng.randint(n)
         if x != exclude:
             return x
+
+def logvars(name, logs, store):
+    store = th.vstack(store)
+    logs.update({
+        f'{name}-mean': store.mean(),
+        f'{name}-std': store.std(),
+        f'{name}-min': store.min(),
+        f'{name}-max': store.max()
+    })
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
 class RandomWalks(Dataset):
@@ -23,6 +34,10 @@ class RandomWalks(Dataset):
             self.adj = rng.rand(nnodes, nnodes) > (1 - pedge)
             np.fill_diagonal(self.adj, 0)
             if np.all(self.adj.sum(1)): break
+
+        # terminal state
+        self.adj[0, :] = 0
+        self.adj[0, 0] = 1
 
         self.goal = 0
         for _ in range(nwalks):
@@ -45,11 +60,11 @@ class RandomWalks(Dataset):
         attention_masks = []
 
         for r, walk in zip(rewards, map(th.tensor, walks)):
-            attention_mask = th.zeros(walksize)
+            attention_mask = th.zeros(walksize, dtype=int)
             attention_mask[:len(walk)] = 1
 
             attention_masks.append(attention_mask)
-            states.append(F.pad(walk, (0, walksize-len(walk)), value=nnodes))
+            states.append(F.pad(walk, (0, walksize-len(walk))))
 
         self.rewards = th.stack(rewards)
         self.attention_masks = th.stack(attention_masks)
@@ -83,3 +98,65 @@ class RandomWalks(Dataset):
         nx.draw_networkx_nodes(g, nodelist=set(range(len(self.adj))) - {self.goal}, pos=pos, node_size=300, node_color='orange')
         nx.draw_networkx_nodes(g, nodelist=[self.goal], pos=pos, node_size=300, node_color='darkblue')
         pyplot.show()
+
+    @th.inference_mode()
+    def eval(self, logs, tbar, model, beta=1):
+        paths = th.arange(1, self.nnodes).view(self.nnodes - 1, -1).to(model.device)
+
+        store_qs = []
+        store_vs = []
+        store_adv = []
+
+        for _ in range(self.walksize):
+            logits, qs, _, vs = model(input_ids=paths)
+
+            qs = qs[:, -1, :]
+            vs = vs[:, -1, :]
+
+            unreachable = np.where(~self.adj[paths[:, -1].cpu().numpy()])
+
+            logits = logits[:, -1, :]
+            logits[unreachable] = -np.inf
+            pi = F.log_softmax(logits, -1)
+
+            advantage = qs - vs
+            pi = F.log_softmax(pi + beta * advantage, -1)
+
+            pi = th.exp(pi)
+            pi /= pi.sum()
+
+            # steps = th.multinomial(pi, 1)
+            steps = th.argmax(pi, -1, keepdim=True)
+            paths = th.hstack((paths, steps))
+
+            store_qs.append(qs)
+            store_vs.append(vs)
+            store_adv.append(advantage)
+
+        logvars('qs', logs, store_qs)
+        logvars('vs', logs, store_vs)
+        logvars('adv', logs, store_adv)
+
+        nodes = th.where(paths == 0)[0]
+        narrived = len(set(nodes.tolist()))
+
+        actn = 0
+        for node in range(self.nnodes-1):
+            for istep in range(self.walksize):
+                if paths[node, istep] == self.goal:
+                    break
+
+            actn += (istep + 1) / (self.nnodes - 1)
+
+        current = (self.worstlen - actn)/(self.worstlen - self.bestlen)
+        average = (self.worstlen - self.avglen)/(self.worstlen - self.bestlen)
+
+        logs.update({
+            'actn': actn,
+            'bestlen': self.bestlen,
+            'worstlen': self.worstlen
+        })
+
+        tbar.set_postfix({
+            'arrived':f'{narrived / (self.nnodes-1) * 100:.0f}%',
+            'optimal': f'{current*100:.0f}% > {average*100:.0f}%'})
