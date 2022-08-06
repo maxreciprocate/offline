@@ -99,3 +99,4 @@ class Sentiments(Dataset):
         logs[f'sentiment/{beta}'] = sentiment
         logs.update({f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32])})
         tbar.set_postfix({'sentiment': f'{sentiment:.2f}'})
+        return sentiment

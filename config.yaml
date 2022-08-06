@@ -1,0 +1,28 @@
+RandomWalks:
+  lr: 0.001
+  opt_betas: [0.9, 0.95]
+  batch_size: 500
+  tau: 0.5
+  cql_scale: 0.2
+  alpha: 1
+  steps_for_target_q_sync: 50
+  inference_betas: [1]
+  n_epochs: 100
+  pretrained: false
+  seed: 1000
+  gptconfig:
+    n_embd: 72
+    n_layer: 2
+    n_head: 1
+
+Sentiments:
+  lr: 0.0006
+  opt_betas: [0.9, 0.95]
+  batch_size: 384
+  tau: 0.5
+  cql_scale: 0.2
+  alpha: 1
+  steps_for_target_q_sync: 100
+  inference_betas: [0, 1, 4, 8]
+  n_epochs: 20
+  pretrained: true

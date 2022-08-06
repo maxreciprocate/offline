@@ -1,4 +1,3 @@
-from ast import walk
 import numpy as np
 import torch as th
 from torch import tensor
@@ -12,14 +11,12 @@ def randexclude(rng: np.random.RandomState, n: int, exclude: int) -> int:
         if x != exclude:
             return x
 
-def logvars(name, logs, store):
-    store = th.vstack(store)
-    logs.update({
-        f'{name}-mean': store.mean(),
-        f'{name}-std': store.std(),
-        f'{name}-min': store.min(),
-        f'{name}-max': store.max()
-    })
+def logvars(name, logs, xs):
+    xs = th.vstack(xs)
+    logs.update({ f'{name}-mean': xs.mean(),
+                  f'{name}-std': xs.std(),
+                  f'{name}-min': xs.min(),
+                  f'{name}-max': xs.max() })
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
 class RandomWalks(Dataset):
@@ -125,8 +122,8 @@ class RandomWalks(Dataset):
             pi = th.exp(pi)
             pi /= pi.sum()
 
-            # steps = th.multinomial(pi, 1)
-            steps = th.argmax(pi, -1, keepdim=True)
+            steps = th.multinomial(pi, 1)
+            # steps = th.argmax(pi, -1, keepdim=True)
             paths = th.hstack((paths, steps))
 
             store_qs.append(qs)
@@ -140,23 +137,23 @@ class RandomWalks(Dataset):
         nodes = th.where(paths == 0)[0]
         narrived = len(set(nodes.tolist()))
 
-        actn = 0
+        actlen = 0
         for node in range(self.nnodes-1):
             for istep in range(self.walksize):
                 if paths[node, istep] == self.goal:
                     break
 
-            actn += (istep + 1) / (self.nnodes - 1)
+            actlen += (istep + 1) / (self.nnodes - 1)
 
-        current = (self.worstlen - actn)/(self.worstlen - self.bestlen)
+        current = (self.worstlen - actlen)/(self.worstlen - self.bestlen)
         average = (self.worstlen - self.avglen)/(self.worstlen - self.bestlen)
 
-        logs.update({
-            'actn': actn,
-            'bestlen': self.bestlen,
-            'worstlen': self.worstlen
-        })
+        logs.update({ 'actlen': actlen,
+                      'avglen': self.avglen,
+                      'bestlen': self.bestlen,
+                      'worstlen': self.worstlen })
 
-        tbar.set_postfix({
-            'arrived':f'{narrived / (self.nnodes-1) * 100:.0f}%',
-            'optimal': f'{current*100:.0f}% > {average*100:.0f}%'})
+        tbar.set_postfix({ 'arrived': f'{narrived / (self.nnodes-1) * 100:.0f}%',
+                           'optimal': f'{current*100:.0f}% > {average*100:.0f}%' })
+
+        return actlen
