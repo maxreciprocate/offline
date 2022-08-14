@@ -8,7 +8,6 @@ RandomWalks:
   steps_for_target_q_sync: 50
   inference_betas: [1]
   n_epochs: 100
-  pretrained: false
   seed: 1000
   gptconfig:
     n_embd: 72
@@ -25,4 +24,18 @@ Sentiments:
   steps_for_target_q_sync: 100
   inference_betas: [0, 1, 4, 8]
   n_epochs: 20
-  pretrained: true
+
+Carps:
+  lr: 0.00004
+  opt_betas: [0.9, 0.95]
+  batch_size: 72
+  tau: 0.5
+  cql_scale: 0.1
+  alpha: 1
+  steps_for_target_q_sync: 100
+  inference_betas: [0, 1, 2, 4]
+  n_epochs: 10
+  model: gpt2-large
+  n_layers_unfrozen: 2
+  max_length: 48
+  diff_reward: true

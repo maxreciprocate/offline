@@ -7,6 +7,7 @@ from torch import tensor, nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from transformers import GPT2PreTrainedModel, GPT2Model, GPT2Config
+from accelerate import Accelerator
 
 import wandb
 from tqdm import trange
@@ -24,7 +25,8 @@ wandb.init(name=f'ilql-{task}', project='ilql', mode='online', config=config)
 config = wandb.config
 locals().update(config)
 
-device = th.device('cuda' if th.cuda.is_available() else 'cpu')
+accelerator = Accelerator()
+device = accelerator.device
 
 class QVModel(GPT2PreTrainedModel):
     _keys_to_ignore_on_load_missing = ['attn.masked_bias']
@@ -68,26 +70,34 @@ if task == 'RandomWalks':
     data = RandomWalks(config['seed'])
     model = QVModel(GPT2Config(**config['gptconfig'], vocab_size=data.nnodes)).to(device)
 
-else:
+elif task == 'Sentiments':
     from sentiments import Sentiments
     data = Sentiments()
-    model = QVModel.from_pretrained('gpt2').to(device)
+    model = QVModel.from_pretrained(config['model']).to(device)
+
+elif task == 'Carps':
+    from carps import Carps
+    data = Carps(max_length=config['max_length'], diff_reward=config['diff_reward'])
+
+    model = QVModel.from_pretrained(config['model']).to(device)
+    gpt_blocks = list(model.transformer.h)[:-config['n_layers_unfrozen']]
+    for m in gpt_blocks:
+        for p in m.parameters():
+            p.requires_grad = False
 
 dataloader = DataLoader(data, batch_size=config['batch_size'], shuffle=True)
 opt = th.optim.Adam(model.parameters(), config['lr'], config['opt_betas'])
 n_opt_steps = 0
 
+model, opt, dataloader = accelerator.prepare(model, opt, dataloader)
+
 tbar = trange(config['n_epochs'])
-data.eval({}, tbar, model, beta=1)
+data.eval({}, model, betas=[0, 1])
 
 for iepoch in tbar:
     start_time = time()
 
     for input, attn, rewards in dataloader:
-        input = input.to(device)
-        attn = attn.to(device)
-        rewards = rewards.to(device)
-
         logits, qs, target_qs, vs = model(input_ids=input, attention_mask=attn)
 
         Q = qs[:, :-1, :].gather(-1, input[:, 1:, None]).squeeze(-1)
@@ -107,7 +117,7 @@ for iepoch in tbar:
         loss = loss_q + loss_v + loss_awac + cql_scale * loss_cql
 
         opt.zero_grad()
-        loss.backward()
+        accelerator.backward(loss)
         nn.utils.clip_grad_norm_(model.parameters(), 1)
         opt.step()
         n_opt_steps += 1
@@ -119,8 +129,8 @@ for iepoch in tbar:
 
     logs = {k: v for k, v in locals().items() if k in ['loss', 'loss_v', 'loss_q', 'loss_cql', 'loss_awac']}
 
-    for beta in config['inference_betas']:
-        data.eval(logs, tbar, model, beta=beta)
+    _, stats = data.eval(logs, model, betas=config['inference_betas'])
+    tbar.set_postfix(stats)
 
     if task != 'RandomWalks':
         th.save(model.state_dict(), 'stash/model.pt')
@@ -128,4 +138,4 @@ for iepoch in tbar:
     logs['epoch_time'] = time() - start_time
     wandb.log(logs)
 
-wandb.log({'target': data.eval({}, tbar, model, beta=1)})
+wandb.log({'target': data.eval({}, model, betas=[1])[0]})
