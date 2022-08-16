@@ -3,12 +3,15 @@ RandomWalks:
   opt_betas: [0.9, 0.95]
   batch_size: 500
   tau: 0.5
-  cql_scale: 0.2
-  alpha: 1
-  steps_for_target_q_sync: 50
+  gamma: 0.99
+  cql_scale: 0.1
+  alpha: 0.1
+  steps_for_target_q_sync: 10
+  steps_for_eval: 5
   inference_betas: [1]
   n_epochs: 100
   seed: 1000
+  two_qs: true
   gptconfig:
     n_embd: 72
     n_layer: 2

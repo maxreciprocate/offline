@@ -4,31 +4,20 @@ from torch import tensor
 import networkx as nx
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
-
-def randexclude(rng: np.random.RandomState, n: int, exclude: int) -> int:
-    while True:
-        x = rng.randint(n)
-        if x != exclude:
-            return x
-
-def logvars(name, logs, xs):
-    xs = th.vstack(xs)
-    logs.update({ f'{name}-mean': xs.mean(),
-                  f'{name}-std': xs.std(),
-                  f'{name}-min': xs.min(),
-                  f'{name}-max': xs.max() })
+from utils import logvars, randexclude, flatten
+import wandb
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
 class RandomWalks(Dataset):
-    def __init__(self, nnodes=20, walksize=10, nwalks=1000, pedge=0.1, seed=1002):
-        self.nnodes = nnodes
-        self.nwalks = nwalks
-        self.walksize = walksize
+    def __init__(self, n_nodes=20, walk_size=10, n_walks=1000, p_edge=0.1, seed=1002):
+        self.n_nodes = n_nodes
+        self.n_walks = n_walks
+        self.walk_size = walk_size
         rng = np.random.RandomState(seed)
 
         walks, rewards = [], []
         while True:
-            self.adj = rng.rand(nnodes, nnodes) > (1 - pedge)
+            self.adj = rng.rand(n_nodes, n_nodes) > (1 - p_edge)
             np.fill_diagonal(self.adj, 0)
             if np.all(self.adj.sum(1)): break
 
@@ -37,17 +26,17 @@ class RandomWalks(Dataset):
         self.adj[0, 0] = 1
 
         self.goal = 0
-        for _ in range(nwalks):
-            node = randexclude(rng, nnodes, self.goal)
+        for _ in range(n_walks):
+            node = randexclude(rng, n_nodes, self.goal)
             walk = [node]
 
-            for istep in range(walksize-1):
+            for istep in range(walk_size-1):
                 node = rng.choice(np.nonzero(self.adj[node])[0])
                 walk.append(node)
                 if node == self.goal:
                     break
 
-            r = th.zeros(walksize-1)
+            r = th.zeros(walk_size-1)
             r[:len(walk)-1] = -1 if walk[-1] == self.goal else -100
 
             rewards.append(r)
@@ -57,29 +46,29 @@ class RandomWalks(Dataset):
         attention_masks = []
 
         for r, walk in zip(rewards, map(th.tensor, walks)):
-            attention_mask = th.zeros(walksize, dtype=int)
+            attention_mask = th.zeros(walk_size, dtype=int)
             attention_mask[:len(walk)] = 1
 
             attention_masks.append(attention_mask)
-            states.append(F.pad(walk, (0, walksize-len(walk))))
+            states.append(F.pad(walk, (0, walk_size-len(walk))))
 
         self.rewards = th.stack(rewards)
         self.attention_masks = th.stack(attention_masks)
         self.states = th.stack(states)
 
-        self.worstlen = self.walksize
-        self.avglen = sum(map(len, walks)) / self.nwalks
+        self.worstlen = self.walk_size
+        self.avglen = sum(map(len, walks)) / self.n_walks
         self.bestlen = 0
         g = nx.from_numpy_array(self.adj)
-        for start in set(range(self.nnodes)) - {self.goal}:
-            shortest_path = nx.shortest_path(g, start, self.goal)[:self.walksize]
+        for start in set(range(self.n_nodes)) - {self.goal}:
+            shortest_path = nx.shortest_path(g, start, self.goal)[:self.walk_size]
             self.bestlen += len(shortest_path)
-        self.bestlen /= self.nnodes - 1
+        self.bestlen /= self.n_nodes - 1
 
-        print(f'{self.nwalks} walks of which {(np.array([r[0] for r in self.rewards])==-1).mean()*100:.0f}% arrived at destination')
+        print(f'{self.n_walks} walks of which {(np.array([r[0] for r in self.rewards])==-1).mean()*100:.0f}% arrived at destination')
 
     def __len__(self):
-        return self.nwalks
+        return self.n_walks
 
     def __getitem__(self, ind):
         return self.states[ind], self.attention_masks[ind], self.rewards[ind]
@@ -97,17 +86,23 @@ class RandomWalks(Dataset):
         pyplot.show()
 
     @th.inference_mode()
-    def eval(self, logs, tbar, model, beta=1):
-        paths = th.arange(1, self.nnodes).view(self.nnodes - 1, -1).to(model.device)
+    def eval(self, logs, model, betas=[1]):
+        model.eval()
+        paths = th.arange(1, self.n_nodes).view(self.n_nodes - 1, -1).to(model.device)
+        beta = betas[-1]
 
         store_qs = []
         store_vs = []
         store_adv = []
+        store_done = [th.ones_like(paths)]
 
-        for _ in range(self.walksize):
-            logits, qs, _, vs = model(input_ids=paths)
+        for _ in range(self.walk_size):
+            logits, _, target_qs, vs = model(input_ids=paths)
+            if model.two_qs:
+                qs = th.minimum(target_qs[0][:, -1, :], target_qs[1][:, -1, :])
+            else:
+                qs = target_qs[:, -1, :]
 
-            qs = qs[:, -1, :]
             vs = vs[:, -1, :]
 
             unreachable = np.where(~self.adj[paths[:, -1].cpu().numpy()])
@@ -116,34 +111,34 @@ class RandomWalks(Dataset):
             logits[unreachable] = -np.inf
             pi = F.log_softmax(logits, -1)
 
-            advantage = qs - vs
-            pi = F.log_softmax(pi + beta * advantage, -1)
+            advs = qs - vs
+            pi = F.softmax(pi + beta * advs, -1)
 
-            pi = th.exp(pi)
-            pi /= pi.sum()
-
-            steps = th.multinomial(pi, 1)
-            # steps = th.argmax(pi, -1, keepdim=True)
+            steps = th.argmax(pi, 1, keepdims=True)
             paths = th.hstack((paths, steps))
 
+            store_done.append((steps != self.goal).int())
             store_qs.append(qs)
             store_vs.append(vs)
-            store_adv.append(advantage)
+            store_adv.append(advs)
+
+        dones = th.hstack(store_done)
+        qs = th.stack(store_qs, dim=1)
+        vs = th.stack(store_vs, dim=1)
 
         logvars('qs', logs, store_qs)
         logvars('vs', logs, store_vs)
         logvars('adv', logs, store_adv)
 
-        nodes = th.where(paths == 0)[0]
-        narrived = len(set(nodes.tolist()))
-
+        narrived = 0
         actlen = 0
-        for node in range(self.nnodes-1):
-            for istep in range(self.walksize):
+        for node in range(self.n_nodes-1):
+            for istep in range(self.walk_size):
                 if paths[node, istep] == self.goal:
+                    narrived += 1
                     break
 
-            actlen += (istep + 1) / (self.nnodes - 1)
+            actlen += (istep + 1) / (self.n_nodes - 1)
 
         current = (self.worstlen - actlen)/(self.worstlen - self.bestlen)
         average = (self.worstlen - self.avglen)/(self.worstlen - self.bestlen)
@@ -153,7 +148,8 @@ class RandomWalks(Dataset):
                       'bestlen': self.bestlen,
                       'worstlen': self.worstlen })
 
-        tbar.set_postfix({ 'arrived': f'{narrived / (self.nnodes-1) * 100:.0f}%',
-                           'optimal': f'{current*100:.0f}% > {average*100:.0f}%' })
+        stats = { 'arrived': f'{narrived / (self.n_nodes-1) * 100:.0f}%',
+                  'optimal': f'{current*100:.0f}% > {average*100:.0f}%' }
 
-        return actlen
+        model.train()
+        return -actlen, stats
