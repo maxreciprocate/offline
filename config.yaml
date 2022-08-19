@@ -20,13 +20,17 @@ RandomWalks:
 Sentiments:
   lr: 0.0006
   opt_betas: [0.9, 0.95]
-  batch_size: 384
-  tau: 0.5
-  cql_scale: 0.2
-  alpha: 1
-  steps_for_target_q_sync: 100
-  inference_betas: [0, 1, 4, 8]
-  n_epochs: 20
+  batch_size: 4
+  tau: 0.7
+  gamma: 0.99
+  cql_scale: 0.1
+  alpha: 0.1
+  steps_for_target_q_sync: 10
+  steps_for_eval: 30
+  inference_betas: [0, 1, 4]
+  model: gpt2
+  two_qs: true
+  n_epochs: 10
 
 Carps:
   lr: 0.00004

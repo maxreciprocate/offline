@@ -8,53 +8,37 @@ from functools import partial, reduce
 from transformers import AutoTokenizer, pipeline
 from datasets import load_dataset
 import wandb
+from utils import topk_mask, sizesplit, flatten
 
 tokenizer = AutoTokenizer.from_pretrained('gpt2')
 
-def tokenize(maxlen, sample):
-    input = tokenizer.encode(tokenizer.bos_token + sample['review'])[:maxlen]
-    sample['input'] = input
-    sample['query'] = tokenizer.decode(input)
-    sample['attention'] = [1] * maxlen
-    sample['reward']= [0] * (maxlen - 1)
-    sample['reward'][-1] = sample['sentiment'] * 2 - 1
+def tokenize(max_length, sample):
+    input = tokenizer.encode(tokenizer.bos_token + sample['review'])[:max_length]
+    sample['input'] = F.pad(tensor(input), (0, max_length-len(input)), value=tokenizer.eos_token_id)
+    sample['text'] = tokenizer.decode(sample['input'], skip_special_tokens=True)
+    attn = th.ones(len(input)-1)
+    sample['attention_mask'] = F.pad(attn, (0, max_length-len(attn)))
     return sample
 
-def filter_outliers(x):
-    return len(x['review']) > 200
-
-def process_data(dataset, maxlen):
-    dataset = dataset.rename_columns({'text': 'review', 'label': 'sentiment'})
-    dataset = dataset.filter(filter_outliers, batched=False)
-    dataset = dataset.map(partial(tokenize, maxlen))
-    return dataset
-
-def topk_mask(xs, k):
-    mintop = th.topk(xs, k)[0][:, -1].unsqueeze(-1)
-    return th.where(xs < mintop, -np.inf * th.ones_like(xs, dtype=xs.dtype), xs)
-
-def sizesplit(size: int, xs):
-    for ind in range(len(xs) // size + 1):
-        yield xs[ind*size:min(len(xs), (ind+1)*size)]
-
-def flatten(xs):
-    return list(reduce(lambda acc, x: acc + x, xs, []))
-
 @th.inference_mode()
-def sample(model, query=None, nsamples=128, beta=1, maxlen=32):
+def sample(model, query=None, n_samples=128, beta=1, max_length=32, temperature=1, top_k=20):
     if query is None:
-        query = tensor([tokenizer.bos_token_id] * nsamples, device=model.device).view(nsamples, 1)
+        query = tensor([tokenizer.bos_token_id] * n_samples, device=model.device).view(n_samples, 1)
 
-    for _ in range(maxlen):
-        logits, qs, _, vs = model(input_ids=query)
-        qs = qs[:, -1, :]
-        vs = vs[:, -1, :]
+    for _ in range(max_length):
+        logits, _, target_qs, vs = model(input_ids=query)
+        if model.two_qs:
+            qs = th.minimum(target_qs[0][:, -1, :], target_qs[1][:, -1, :])
+        else:
+            qs = target_qs[:, -1, :]
+
         logits = logits[:, -1, :]
+        vs = vs[:, -1, :]
 
         adv = qs - vs
         pi = F.log_softmax(logits, -1)
-        modpi = topk_mask(pi + beta * adv, 10)
-        ps = F.softmax(modpi, -1)
+        modpi = topk_mask(pi + beta * adv, top_k)
+        ps = F.softmax(modpi / temperature, -1)
 
         tokens = th.multinomial(ps, 1)
         query = th.hstack((query, tokens))
@@ -62,41 +46,57 @@ def sample(model, query=None, nsamples=128, beta=1, maxlen=32):
     return query
 
 class Sentiments(Dataset):
-    def __init__(self, maxlen=16):
+    def __init__(self, max_length=16, n_samples=4):
         pipe_device = 0 if th.cuda.is_available() else -1
         self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=pipe_device)
-        self.maxlen = maxlen
+        self.max_length = max_length
 
-        ds_train = load_dataset('imdb', split='train+test')
-        ds_train = process_data(ds_train, maxlen=maxlen)
+        ds = load_dataset('imdb', split='train+test').shuffle(seed=1000)
+        ds = ds.rename_columns({'text': 'review', 'label': 'sentiment'})
+        ds = ds.filter(lambda x: 200 < len(x['review']) < tokenizer.max_len_single_sentence, batched=False)
+        ds = ds.map(partial(tokenize, max_length))
+        ds_train, ds_valid = ds[:-n_samples], ds[-n_samples:]
 
-        self.texts = tensor(ds_train['input'])
+        self.tokens = tensor(ds_train['input'])
+        self.attention_masks = tensor(ds_train['attention_mask'])
 
-        sentiments = flatten([self.sentiment_pipe(batch) for batch in sizesplit(1024, ds_train['query'])])
-        self.sentiments = tensor([-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in sentiments])
-        self.rewards = th.zeros(len(ds_train), maxlen-1)
-        self.rewards[:, -1] = self.sentiments
+        sentiments = flatten([self.sentiment_pipe(batch) for batch in sizesplit(1024, ds_train['text'])])
+        sentiments = tensor([-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in sentiments])
+        self.rewards = sentiments.view(-1, 1).repeat(1, max_length-1)
 
-        self.attention_masks = tensor(ds_train['attention'])
+        queries = []
+        min_query_len = 4
+        max_query_len = max(min_query_len+1, max_length // 2)
+        cutoffs = np.random.RandomState(1000).randint(min_query_len, max_query_len, size=n_samples)
+        for i, cutoff in zip(range(n_samples), cutoffs):
+            query = ds_valid['input'][i][:cutoff]
+            query = F.pad(tensor(query), (max_query_len-cutoff, 0), value=tokenizer.eos_token_id)
+            queries.append(query)
+
+        self.queries = th.vstack(queries)
 
     def __len__(self):
-        return self.texts.shape[0]
+        return self.tokens.shape[0]
 
     def __getitem__(self, ind):
-        return self.texts[ind], self.attention_masks[ind], self.rewards[ind]
+        return self.tokens[ind], self.attention_masks[ind], self.rewards[ind]
 
-    def eval(self, logs, tbar, model, beta=1, nsamples=128):
-        responses = sample(model, beta=beta, maxlen=self.maxlen, nsamples=nsamples)
-        sentences = [tokenizer.decode(response[1:]) for response in responses]
+    def eval(self, logs, model, betas=[1]):
+        model.eval()
 
-        sentiments = [1-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in self.sentiment_pipe(sentences)]
-        sentiment = np.mean(sentiments)
+        for beta in betas:
+            responses = sample(model, self.queries.to(model.device), beta=beta, max_length=self.max_length)
+            reviews = [tokenizer.decode(response, skip_special_tokens=True) for response in responses]
 
-        rows = list(zip(sentences, sentiments))
+            rewards = [1-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in self.sentiment_pipe(reviews)]
+            reward = np.mean(rewards)
 
-        print(f'\n{beta=} {sentiment=:.2f}\n' + '\n'.join([f'[{sent:.2f}] {text}' for text, sent in rows[:8]]))
+            rows = list(zip(reviews, rewards))
+            print(f'\n{beta=} {reward=:.2f}\n' + '\n'.join([f'[{sent:.2f}] {text}' for text, sent in rows[:8]]))
 
-        logs[f'sentiment/{beta}'] = sentiment
-        logs.update({f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32])})
-        tbar.set_postfix({'sentiment': f'{sentiment:.2f}'})
-        return sentiment
+            logs[f'reward/{beta}'] = reward
+            logs.update({f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32])})
+
+        stats = {'reward': f'{reward:.2f}'}
+        model.train()
+        return reward, stats
