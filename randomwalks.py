@@ -86,7 +86,7 @@ class RandomWalks(Dataset):
         pyplot.show()
 
     @th.inference_mode()
-    def eval(self, logs, model, betas=[1]):
+    def eval(self, logs, model, two_qs=True, betas=[1]):
         model.eval()
         paths = th.arange(1, self.n_nodes).view(self.n_nodes - 1, -1).to(model.device)
         beta = betas[-1]
@@ -98,7 +98,7 @@ class RandomWalks(Dataset):
 
         for _ in range(self.walk_size):
             logits, _, target_qs, vs = model(input_ids=paths)
-            if model.two_qs:
+            if two_qs:
                 qs = th.minimum(target_qs[0][:, -1, :], target_qs[1][:, -1, :])
             else:
                 qs = target_qs[:, -1, :]
