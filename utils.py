@@ -1,5 +1,7 @@
 import numpy as np
 import torch as th
+from tqdm import tqdm
+import math
 
 try:
     __IPYTHON__
@@ -13,6 +15,15 @@ def randexclude(rng: np.random.RandomState, n: int, exclude: int) -> int:
         if x != exclude:
             return x
 
+def tohuman(n: int) -> str:
+    if n > 1e9:
+        return f'{n / 1e9:.1f}B'
+    elif n > 1e6:
+        return f'{n / 1e6:.1f}M'
+    elif n > 1e3:
+        return f'{n / 1e3:.1f}K'
+    return str(n)
+
 def logvars(name, logs, xs):
     xs = th.vstack(xs)
     logs.update({ f'{name}-mean': xs.mean(),
@@ -20,16 +31,13 @@ def logvars(name, logs, xs):
                   f'{name}-min': xs.min(),
                   f'{name}-max': xs.max() })
 
-def topk_mask(xs, k):
-    mintop = th.topk(xs, k)[0][:, -1].unsqueeze(-1)
-    return th.where(xs < mintop, -np.inf * th.ones_like(xs, dtype=xs.dtype), xs)
+def batch_map(fn, xs, bsize: int, desc=None):
+    out = []
+    for ind in tqdm(range(math.ceil(len(xs) / bsize)), desc=desc):
+        batch = xs[ind*bsize:min(len(xs), (ind+1)*bsize)]
+        out.extend(fn(batch))
 
-def sizesplit(size: int, xs):
-    for ind in range(len(xs) // size + 1):
-        yield xs[ind*size:min(len(xs), (ind+1)*size)]
-
-def flatten(xs):
-    return sum(xs, [])
+    return out
 
 def isdelim(c: str):
     return c == '?' or c == '!' or c == '.' or c == ';'

@@ -1,92 +1,73 @@
+import os
 import numpy as np
 import torch as th
 from torch import tensor
 import torch.nn.functional as F
-from torch.utils.data import Dataset
+from torch.utils.data import TensorDataset
 from functools import partial, reduce
 
 from transformers import AutoTokenizer, pipeline
 from datasets import load_dataset
 import wandb
-from utils import topk_mask, sizesplit, flatten
+from tqdm import tqdm
+import math
 
-tokenizer = AutoTokenizer.from_pretrained('gpt2')
+from utils import batch_map, tohuman
 
-def tokenize(max_length, sample):
-    input = tokenizer.encode(tokenizer.bos_token + sample['review'])[:max_length]
-    sample['input'] = F.pad(tensor(input), (0, max_length-len(input)), value=tokenizer.eos_token_id)
-    sample['text'] = tokenizer.decode(sample['input'], skip_special_tokens=True)
-    attn = th.ones(len(input)-1)
-    sample['attention_mask'] = F.pad(attn, (0, max_length-len(attn)))
-    return sample
+def load_tensors(cache_path, tokenizer, sentiment_pipe, max_length=128, use_cache=True):
+    if use_cache and os.path.exists(cache_path):
+        cache = th.load(cache_path)
+    else:
+        ds = load_dataset('imdb', split='train+test')
 
-@th.inference_mode()
-def sample(model, query=None, n_samples=128, beta=1, max_length=32, temperature=1, top_k=20):
-    if query is None:
-        query = tensor([tokenizer.bos_token_id] * n_samples, device=model.device).view(n_samples, 1)
+        tokens = []
+        for text in tqdm(ds['text']):
+            ids = tokenizer(text)['input_ids']
+            ids.insert(0, tokenizer.eos_token_id)
+            ids.append(tokenizer.eos_token_id)
 
-    for _ in range(max_length):
-        logits, _, target_qs, vs = model(input_ids=query)
-        if model.two_qs:
-            qs = th.minimum(target_qs[0][:, -1, :], target_qs[1][:, -1, :])
-        else:
-            qs = target_qs[:, -1, :]
+            for i in range(0, max(1, len(ids)-max_length+1), max_length):
+                sids = ids[i:i + max_length]
+                tokens.append(sids + [tokenizer.eos_token_id] * (max_length - len(ids)))
 
-        logits = logits[:, -1, :]
-        vs = vs[:, -1, :]
+        tokens = tensor(tokens)
+        attention_masks = tokens.ne(tokenizer.eos_token_id).int()
+        attention_masks[:, 0] = 1
 
-        adv = qs - vs
-        pi = F.log_softmax(logits, -1)
-        modpi = topk_mask(pi + beta * adv, top_k)
-        ps = F.softmax(modpi / temperature, -1)
-
-        tokens = th.multinomial(ps, 1)
-        query = th.hstack((query, tokens))
-
-    return query
-
-class Sentiments(Dataset):
-    def __init__(self, max_length=16, n_samples=4):
-        pipe_device = 0 if th.cuda.is_available() else -1
-        self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=pipe_device)
-        self.max_length = max_length
-
-        ds = load_dataset('imdb', split='train+test').shuffle(seed=1000)
-        ds = ds.rename_columns({'text': 'review', 'label': 'sentiment'})
-        ds = ds.filter(lambda x: 200 < len(x['review']) < tokenizer.max_len_single_sentence, batched=False)
-        ds = ds.map(partial(tokenize, max_length))
-        ds_train, ds_valid = ds[:-n_samples], ds[-n_samples:]
-
-        self.tokens = tensor(ds_train['input'])
-        self.attention_masks = tensor(ds_train['attention_mask'])
-
-        sentiments = flatten([self.sentiment_pipe(batch) for batch in sizesplit(1024, ds_train['text'])])
+        sentiments = batch_map(lambda batch: sentiment_pipe(tokenizer.batch_decode(batch)), tokens, bsize=1024)
         sentiments = tensor([-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in sentiments])
-        self.rewards = sentiments.view(-1, 1).repeat(1, max_length-1)
+        rewards = sentiments.view(-1, 1).repeat(1, max_length-1)
 
-        queries = []
-        min_query_len = 4
-        max_query_len = max(min_query_len+1, max_length // 2)
-        cutoffs = np.random.RandomState(1000).randint(min_query_len, max_query_len, size=n_samples)
-        for i, cutoff in zip(range(n_samples), cutoffs):
-            query = ds_valid['input'][i][:cutoff]
-            query = F.pad(tensor(query), (max_query_len-cutoff, 0), value=tokenizer.eos_token_id)
-            queries.append(query)
+        cache = {'tokens': tokens, 'attention_masks': attention_masks, 'rewards': rewards}
 
-        self.queries = th.vstack(queries)
+        if not os.path.exists(os.path.dirname(cache_path)):
+            os.mkdir(os.path.dirname(cache_path))
 
-    def __len__(self):
-        return self.tokens.shape[0]
+        th.save(cache, cache_path)
 
-    def __getitem__(self, ind):
-        return self.tokens[ind], self.attention_masks[ind], self.rewards[ind]
+    print(f"{tohuman(np.prod(cache['tokens'].shape))} tokens")
+    return cache
+
+class Sentiments(TensorDataset):
+    def __init__(self, tokenizer: AutoTokenizer, max_length=64, n_samples=32):
+        self.max_length = max_length
+        self.n_samples = n_samples
+        self.tokenizer = tokenizer
+
+        device = 0 if th.cuda.is_available() else -1
+        self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=device)
+
+        cache_path = f'cache/imdb-sentiments_{max_length=}_tokenizer={tokenizer.name_or_path}.pt'
+        tensors = load_tensors(cache_path, self.tokenizer, self.sentiment_pipe, max_length=max_length)
+
+        super().__init__(tensors['tokens'], tensors['attention_masks'], tensors['rewards'])
 
     def eval(self, logs, model, betas=[1]):
-        model.eval()
+        query = tensor([self.tokenizer.eos_token_id] * self.n_samples, device=model.device).view(self.n_samples, 1)
 
         for beta in betas:
-            responses = sample(model, self.queries.to(model.device), beta=beta, max_length=self.max_length)
-            reviews = [tokenizer.decode(response, skip_special_tokens=True) for response in responses]
+            responses, stats = model.sample(query, beta=beta, max_length=self.max_length)
+            reviews = self.tokenizer.batch_decode(responses, skip_special_tokens=True)
 
             rewards = [1-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in self.sentiment_pipe(reviews)]
             reward = np.mean(rewards)
@@ -98,5 +79,4 @@ class Sentiments(Dataset):
             logs.update({f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32])})
 
         stats = {'reward': f'{reward:.2f}'}
-        model.train()
         return reward, stats

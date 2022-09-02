@@ -4,7 +4,7 @@ from torch import tensor
 import networkx as nx
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
-from utils import logvars, randexclude, flatten
+from utils import logvars, randexclude
 import wandb
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
@@ -86,49 +86,12 @@ class RandomWalks(Dataset):
         pyplot.show()
 
     @th.inference_mode()
-    def eval(self, logs, model, two_qs=True, betas=[1]):
-        model.eval()
-        paths = th.arange(1, self.n_nodes).view(self.n_nodes - 1, -1).to(model.device)
+    def eval(self, logs, model, betas=[1]):
         beta = betas[-1]
+        starts = th.arange(1, self.n_nodes).unsqueeze(1).to(model.device)
 
-        store_qs = []
-        store_vs = []
-        store_adv = []
-        store_done = [th.ones_like(paths)]
-
-        for _ in range(self.walk_size):
-            logits, _, target_qs, vs = model(input_ids=paths)
-            if two_qs:
-                qs = th.minimum(target_qs[0][:, -1, :], target_qs[1][:, -1, :])
-            else:
-                qs = target_qs[:, -1, :]
-
-            vs = vs[:, -1, :]
-
-            unreachable = np.where(~self.adj[paths[:, -1].cpu().numpy()])
-
-            logits = logits[:, -1, :]
-            logits[unreachable] = -np.inf
-            pi = F.log_softmax(logits, -1)
-
-            advs = qs - vs
-            pi = F.softmax(pi + beta * advs, -1)
-
-            steps = th.argmax(pi, 1, keepdims=True)
-            paths = th.hstack((paths, steps))
-
-            store_done.append((steps != self.goal).int())
-            store_qs.append(qs)
-            store_vs.append(vs)
-            store_adv.append(advs)
-
-        dones = th.hstack(store_done)
-        qs = th.stack(store_qs, dim=1)
-        vs = th.stack(store_vs, dim=1)
-
-        logvars('qs', logs, store_qs)
-        logvars('vs', logs, store_vs)
-        logvars('adv', logs, store_adv)
+        paths, stats = model.sample(starts, max_length=self.walk_size, logit_mask=tensor(~self.adj), beta=beta)
+        logs.update(stats)
 
         narrived = 0
         actlen = 0
@@ -151,5 +114,4 @@ class RandomWalks(Dataset):
         stats = { 'arrived': f'{narrived / (self.n_nodes-1) * 100:.0f}%',
                   'optimal': f'{current*100:.0f}% > {average*100:.0f}%' }
 
-        model.train()
         return -actlen, stats
