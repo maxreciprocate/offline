@@ -54,10 +54,14 @@ class RandomWalks(TensorDataset):
         self.worstlen = self.walk_size
         self.avglen = sum(map(len, walks)) / self.n_walks
         self.bestlen = 0
-        g = nx.from_numpy_array(self.adj)
+        g = nx.from_numpy_array(self.adj, create_using=nx.DiGraph)
         for start in set(range(self.n_nodes)) - {self.goal}:
-            shortest_path = nx.shortest_path(g, start, self.goal)[:self.walk_size]
-            self.bestlen += len(shortest_path)
+            try:
+                shortest_path = nx.shortest_path(g, start, self.goal)[:self.walk_size]
+                self.bestlen += len(shortest_path)
+            except:
+                self.bestlen += self.walk_size
+
         self.bestlen /= self.n_nodes - 1
 
         print(f'{self.n_walks} walks of which {(np.array([r[0] for r in rewards])==-1).mean()*100:.0f}% arrived at destination')
@@ -66,7 +70,7 @@ class RandomWalks(TensorDataset):
     def render(self):
         from matplotlib import pyplot
 
-        g = nx.from_numpy_array(self.adj)
+        g = nx.from_numpy_array(self.adj, create_using=nx.DiGraph)
         pos = nx.spring_layout(g, seed=7357)
 
         pyplot.figure(figsize=(10, 8))

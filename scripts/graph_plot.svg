@@ -1,1372 +1,1298 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1080pt" height="576pt" viewBox="0 0 1080 576" xmlns="http://www.w3.org/2000/svg" version="1.1">
- <metadata>
-  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-   <cc:Work>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2022-09-04T07:41:09.695037</dc:date>
-    <dc:format>image/svg+xml</dc:format>
-    <dc:creator>
-     <cc:Agent>
-      <dc:title>Matplotlib v3.5.3, https://matplotlib.org/</dc:title>
-     </cc:Agent>
-    </dc:creator>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <defs>
-  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
- </defs>
- <g id="figure_1">
-  <g id="patch_1">
-   <path d="M 0 576 
-L 1080 576 
-L 1080 0 
-L 0 0 
-z
-" style="fill: #ffffff"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="943.41223pt"
+   height="543.47913pt"
+   viewBox="0 0 943.41223 543.47913"
+   version="1.1"
+   id="svg515"
+   sodipodi:docname="graph_plot.svg"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview517"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="0.57655246"
+     inkscape:cx="666.02786"
+     inkscape:cy="334.74838"
+     inkscape:window-width="1280"
+     inkscape:window-height="772"
+     inkscape:window-x="1280"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg515" />
+  <metadata
+     id="metadata2">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:date>2022-09-04T18:32:28.332967</dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Matplotlib v3.5.3, https://matplotlib.org/</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <style
+       type="text/css"
+       id="style4">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+  </defs>
+  <g
+     id="figure_1"
+     transform="translate(-48.130919,-5.2033426)">
+    <g
+       id="patch_1"
+       transform="matrix(0.86028061,0,0,0.94354012,48.130919,5.2033426)">
+      <path
+         d="M 0,0 H 1080 V 576 H 0 Z"
+         style="fill:#ffffff"
+         id="path8"
+         sodipodi:nodetypes="ccccc" />
+    </g>
+    <g
+       id="axes_1"
+       transform="translate(6.5041783,-52.033426)">
+      <g
+         id="patch_2">
+        <path
+           d="M 135,512.64 H 972 V 69.12 H 135 Z"
+           style="fill:#ffffff"
+           id="path11" />
+      </g>
+      <g
+         id="matplotlib.axis_1">
+        <g
+           id="xtick_1">
+          <g
+             id="line2d_1">
+            <path
+               d="M 205.52328,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path14" />
+          </g>
+          <g
+             id="text_1">
+            <!-- 1 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,199.35141,536.13375)"
+               id="g22">
+              <defs
+                 id="defs18">
+                <path
+                   id="Futura-Medium-31"
+                   d="M 1734,4144 H 900 l 400,681 H 2463 V 0 h -729 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-31"
+                 id="use20" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_2">
+          <g
+             id="line2d_2">
+            <path
+               d="M 282.85144,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path26" />
+          </g>
+          <g
+             id="text_2">
+            <!-- 2 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,276.67957,536.13375)"
+               id="g34">
+              <defs
+                 id="defs30">
+                <path
+                   id="Futura-Medium-32"
+                   d="M 1603,684 H 3400 V 0 H 159 l 1675,2028 q 247,303 414,525 168,222 255,372 178,294 178,528 0,338 -238,566 -237,228 -587,228 -731,0 -837,-866 H 294 q 175,1525 1540,1525 660,0 1107,-418 450,-419 450,-1038 0,-394 -210,-772 -106,-197 -311,-467 -204,-270 -517,-639 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-32"
+                 id="use32" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_3">
+          <g
+             id="line2d_3">
+            <path
+               d="M 360.1796,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path38" />
+          </g>
+          <g
+             id="text_3">
+            <!-- 3 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,354.00773,536.13375)"
+               id="g46">
+              <defs
+                 id="defs42">
+                <path
+                   id="Futura-Medium-33"
+                   d="m 1656,2241 v 622 q 463,0 622,103 285,181 285,581 0,309 -207,503 -203,197 -528,197 -303,0 -469,-147 -159,-150 -237,-506 H 397 q 112,681 462,998 350,317 979,317 634,0 1034,-375 400,-371 400,-959 0,-662 -525,-1031 600,-353 600,-1147 Q 3347,747 2909,334 2472,-78 1788,-78 916,-78 494,563 319,831 272,1306 h 703 q 56,-350 273,-536 218,-186 568,-186 353,0 584,235 231,240 231,609 0,488 -347,694 -203,119 -628,119 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-33"
+                 id="use44" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_4">
+          <g
+             id="line2d_4">
+            <path
+               d="M 437.50776,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path50" />
+          </g>
+          <g
+             id="text_4">
+            <!-- 4 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,431.33589,536.13375)"
+               id="g58">
+              <defs
+                 id="defs54">
+                <path
+                   id="Futura-Medium-34"
+                   d="m 3156,1347 h 513 V 684 H 3156 V 0 H 2428 V 684 H 59 l 3097,4500 z m -728,0 V 2963 L 1316,1347 Z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-34"
+                 id="use56" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_5">
+          <g
+             id="line2d_5">
+            <path
+               d="M 514.83592,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path62" />
+          </g>
+          <g
+             id="text_5">
+            <!-- 5 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,508.66404,536.13375)"
+               id="g70">
+              <defs
+                 id="defs66">
+                <path
+                   id="Futura-Medium-35"
+                   d="M 3366,4144 H 1878 l -237,-800 q 53,6 101,9 49,3 89,3 703,0 1153,-475 454,-472 454,-1209 Q 3438,909 2925,415 2413,-78 1634,-78 675,-78 122,822 l 550,466 q 228,-388 459,-547 232,-157 566,-157 437,0 734,307 297,315 297,765 0,463 -294,757 -293,303 -734,303 -491,0 -847,-428 H 613 l 759,2537 h 1994 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-35"
+                 id="use68" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_6">
+          <g
+             id="line2d_6">
+            <path
+               d="M 592.16408,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path74" />
+          </g>
+          <g
+             id="text_6">
+            <!-- 6 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,585.99221,536.13375)"
+               id="g82">
+              <defs
+                 id="defs78">
+                <path
+                   id="Futura-Medium-36"
+                   d="M 2513,4994 3047,4594 1894,3025 q 94,13 159,19 66,6 103,6 588,0 1016,-450 425,-444 425,-1069 Q 3597,869 3122,394 2650,-78 1988,-78 1331,-78 838,388 353,853 353,1491 q 0,572 472,1212 z m 375,-3510 q 0,385 -266,650 -269,269 -647,269 -381,0 -647,-266 -265,-265 -265,-643 0,-378 265,-644 266,-266 650,-266 375,0 641,266 269,269 269,634 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-36"
+                 id="use80" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_7">
+          <g
+             id="line2d_7">
+            <path
+               d="M 669.49224,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path86" />
+          </g>
+          <g
+             id="text_7">
+            <!-- 7 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,663.32036,536.13375)"
+               id="g94">
+              <defs
+                 id="defs90">
+                <path
+                   id="Futura-Medium-37"
+                   d="M 2713,4144 H 331 v 681 H 3928 L 884,-166 306,200 Z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-37"
+                 id="use92" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_8">
+          <g
+             id="line2d_8">
+            <path
+               d="M 746.8204,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path98" />
+          </g>
+          <g
+             id="text_8">
+            <!-- 8 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,740.64852,536.13375)"
+               id="g106">
+              <defs
+                 id="defs102">
+                <path
+                   id="Futura-Medium-38"
+                   d="m 1113,2509 q -532,375 -532,1022 0,588 403,982 407,393 1010,393 600,0 1000,-393 400,-391 400,-985 0,-622 -528,-1015 290,-157 456,-457 169,-300 169,-675 Q 3491,741 3072,331 2653,-78 2000,-78 1331,-78 897,334 459,747 459,1372 q 0,812 654,1137 z m 153,1025 q 0,-309 209,-518 213,-213 513,-213 296,0 508,212 213,213 213,510 0,297 -213,509 -212,213 -508,213 -297,0 -510,-213 -212,-212 -212,-500 z m -91,-2137 q 0,-334 231,-575 235,-238 569,-238 331,0 566,235 234,237 234,569 0,334 -235,568 -234,235 -565,235 -328,0 -566,-235 -234,-234 -234,-559 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-38"
+                 id="use104" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_9">
+          <g
+             id="line2d_9">
+            <path
+               d="M 824.14856,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path110" />
+          </g>
+          <g
+             id="text_9">
+            <!-- 9 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,817.97668,536.13375)"
+               id="g118">
+              <defs
+                 id="defs114">
+                <path
+                   id="Futura-Medium-39"
+                   d="M 1438,-166 903,231 2056,1803 q -93,-12 -159,-19 -66,-6 -106,-6 -585,0 -1013,447 -425,444 -425,1069 0,665 472,1137 475,475 1138,475 659,0 1146,-468 488,-466 488,-1100 0,-563 -475,-1216 z m -375,3513 q 0,-391 265,-656 269,-269 647,-269 378,0 644,266 269,268 269,646 0,379 -269,647 -266,266 -647,266 -375,0 -641,-266 -268,-268 -268,-634 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-39"
+                 id="use116" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="xtick_10">
+          <g
+             id="line2d_10">
+            <path
+               d="M 901.47672,512.64 V 69.12"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#ffffff;stroke-width:0.8;stroke-linecap:square"
+               id="path122" />
+          </g>
+          <g
+             id="text_10">
+            <!-- ∞ -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,893.93766,536.13375)"
+               id="g130">
+              <defs
+                 id="defs126">
+                <path
+                   id="Futura-Medium-221e"
+                   d="m 2431,1988 q -509,-669 -1162,-669 -503,0 -822,319 -319,321 -319,831 0,494 322,815 322,322 819,322 637,0 1131,-665 481,665 1163,665 506,0 818,-322 319,-318 319,-825 0,-500 -319,-821 -312,-322 -809,-322 -663,0 -1141,672 z m 341,475 q 347,-532 700,-532 219,0 366,150 146,157 146,382 0,218 -150,375 -143,153 -365,153 -350,0 -697,-528 z m -716,0 q -340,528 -703,528 -219,0 -362,-153 -147,-157 -147,-375 0,-222 147,-379 150,-153 368,-153 354,0 697,532 z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-221e"
+                 id="use128" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="text_11">
+          <!-- # of steps to goal -->
+          <g
+             style="fill:#444444"
+             transform="matrix(0.22,0,0,-0.22,466.31984,579.74406)"
+             id="g183">
+            <defs
+               id="defs145">
+              <path
+                 id="Futura-Medium-23"
+                 d="m 3834,3469 v -550 h -759 l -112,-897 h 693 V 1472 H 2894 L 2709,-22 2159,50 2338,1472 H 1409 L 1222,-22 666,50 844,1484 H 131 v 538 h 791 l 112,897 H 313 v 550 h 790 l 172,1400 547,-72 -166,-1328 h 922 l 175,1400 547,-72 -166,-1328 z M 2509,2919 h -918 l -113,-897 h 925 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-20"
+                 transform="scale(0.015625)"
+                 d="" />
+              <path
+                 id="Futura-Medium-6f"
+                 d="m 300,1544 q 0,659 472,1121 472,463 1150,463 681,0 1156,-465 469,-466 469,-1144 Q 3547,834 3075,372 2600,-88 1909,-88 1225,-88 763,381 300,844 300,1544 Z m 719,-13 q 0,-456 244,-722 250,-268 659,-268 412,0 659,265 247,266 247,710 0,443 -247,709 -250,269 -659,269 -403,0 -653,-269 -250,-269 -250,-694 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-66"
+                 d="M 1172,2388 V 0 H 466 V 2388 H 216 v 656 h 250 v 1175 q 0,575 200,812 275,332 800,332 187,0 472,-110 v -719 l -72,38 q -228,116 -375,116 -188,0 -253,-135 -66,-131 -66,-506 V 3044 h 766 v -656 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-73"
+                 d="m 2213,2525 -582,-309 q -137,281 -340,281 -97,0 -166,-64 -69,-64 -69,-164 0,-175 407,-347 559,-241 752,-444 194,-203 194,-547 0,-440 -325,-737 Q 1769,-88 1322,-88 556,-88 238,659 l 600,279 q 125,-219 190,-279 128,-118 306,-118 357,0 357,325 0,187 -275,350 -107,53 -213,103 -106,50 -215,103 -307,150 -432,300 -159,191 -159,491 0,396 272,656 278,259 675,259 584,0 869,-603 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-74"
+                 d="M 1169,2388 V 0 H 466 V 2388 H 166 v 656 h 300 v 1115 h 703 V 3044 h 547 v -656 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-65"
+                 d="M 3216,1356 H 1034 q 29,-375 244,-597 216,-218 553,-218 263,0 435,125 168,125 384,462 L 3244,797 Q 3106,563 2953,395 2800,228 2625,120 2450,13 2247,-37 2044,-88 1806,-88 1125,-88 713,350 300,791 300,1519 q 0,722 400,1169 403,440 1069,440 672,0 1062,-428 388,-425 388,-1178 z m -722,575 q -147,563 -710,563 -128,0 -241,-39 -112,-39 -204,-113 -92,-73 -158,-176 -65,-103 -100,-235 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-70"
+                 d="M 1147,-1656 H 444 v 4700 h 703 v -331 q 416,415 944,415 628,0 1034,-462 413,-460 413,-1160 0,-684 -410,-1140 -406,-454 -1025,-454 -534,0 -956,429 z m 1672,3159 q 0,438 -238,713 -240,278 -606,278 -387,0 -628,-269 -241,-269 -241,-706 0,-428 241,-706 237,-272 625,-272 366,0 603,275 244,275 244,687 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-67"
+                 d="m 3388,72 q 0,-216 -15,-380 -14,-164 -39,-289 -75,-344 -293,-591 -413,-475 -1135,-475 -609,0 -1003,329 -406,337 -469,934 h 707 q 40,-225 134,-347 219,-284 638,-284 771,0 771,947 V 341 Q 2266,-88 1719,-88 1097,-88 700,363 300,819 300,1503 q 0,666 372,1131 400,494 1056,494 575,0 956,-428 v 344 h 704 z m -675,1444 q 0,443 -238,709 -241,272 -616,272 -400,0 -631,-297 -209,-266 -209,-687 0,-416 209,-682 228,-290 631,-290 404,0 638,293 216,266 216,682 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-61"
+                 d="m 2688,3044 h 706 V 0 H 2688 V 319 Q 2253,-88 1753,-88 1122,-88 709,369 300,834 300,1531 q 0,685 409,1141 410,456 1025,456 532,0 954,-437 z M 1019,1531 q 0,-437 234,-712 241,-278 606,-278 391,0 632,268 240,279 240,707 0,428 -240,706 -241,272 -625,272 -363,0 -607,-275 -240,-278 -240,-688 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-6c"
+                 d="M 1147,5278 V 0 H 444 v 5278 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <use
+               xlink:href="#Futura-Medium-23"
+               id="use147" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="61.71875"
+               id="use149" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="92.578125"
+               id="use151" />
+            <use
+               xlink:href="#Futura-Medium-66"
+               x="152.68555"
+               id="use153" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="182.37305"
+               id="use155" />
+            <use
+               xlink:href="#Futura-Medium-73"
+               x="213.23242"
+               id="use157" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="253.80859"
+               id="use159" />
+            <use
+               xlink:href="#Futura-Medium-65"
+               x="282.02734"
+               id="use161" />
+            <use
+               xlink:href="#Futura-Medium-70"
+               x="337.34961"
+               id="use163" />
+            <use
+               xlink:href="#Futura-Medium-73"
+               x="397.31055"
+               id="use165" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="437.88672"
+               id="use167" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="468.74609"
+               id="use169" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="496.71484"
+               id="use171" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="556.82227"
+               id="use173" />
+            <use
+               xlink:href="#Futura-Medium-67"
+               x="587.68164"
+               id="use175" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="647.54492"
+               id="use177" />
+            <use
+               xlink:href="#Futura-Medium-61"
+               x="707.65234"
+               id="use179" />
+            <use
+               xlink:href="#Futura-Medium-6c"
+               x="767.61328"
+               id="use181" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="matplotlib.axis_2">
+        <g
+           id="ytick_1">
+          <g
+             id="line2d_11">
+            <path
+               d="M 135,512.64 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path187" />
+          </g>
+          <g
+             id="text_12">
+            <!-- 0.0 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,97.140625,520.88688)"
+               id="g200">
+              <defs
+                 id="defs192">
+                <path
+                   id="Futura-Medium-30"
+                   d="m 272,2444 q 0,1153 537,1840 482,622 1166,622 684,0 1166,-622 537,-687 537,-1871 Q 3678,1231 3141,544 2659,-78 1978,-78 1297,-78 809,544 272,1231 272,2444 Z m 716,-3 q 0,-803 278,-1335 278,-522 709,-522 428,0 709,522 282,519 282,1310 0,790 -282,1312 -281,519 -709,519 -425,0 -706,-519 Q 988,3213 988,2441 Z"
+                   transform="scale(0.015625)" />
+                <path
+                   id="Futura-Medium-2e"
+                   d="m 553,350 q 0,175 128,303 128,128 307,128 178,0 306,-128 Q 1422,525 1422,347 1422,166 1294,38 1169,-88 988,-88 803,-88 678,37 553,163 553,350 Z"
+                   transform="scale(0.015625)" />
+              </defs>
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use194" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use196" />
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 x="92.578125"
+                 id="use198" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="ytick_2">
+          <g
+             id="line2d_12">
+            <path
+               d="M 135,434.93581 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path204" />
+          </g>
+          <g
+             id="text_13">
+            <!-- 0.1 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,98.740625,443.18268)"
+               id="g213">
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use207" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use209" />
+              <use
+                 xlink:href="#Futura-Medium-31"
+                 x="84.578125"
+                 id="use211" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="ytick_3">
+          <g
+             id="line2d_13">
+            <path
+               d="M 135,357.23161 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path217" />
+          </g>
+          <g
+             id="text_14">
+            <!-- 0.2 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,97.140625,365.47849)"
+               id="g226">
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use220" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use222" />
+              <use
+                 xlink:href="#Futura-Medium-32"
+                 x="92.578125"
+                 id="use224" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="ytick_4">
+          <g
+             id="line2d_14">
+            <path
+               d="M 135,279.52742 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path230" />
+          </g>
+          <g
+             id="text_15">
+            <!-- 0.3 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,97.140625,287.77429)"
+               id="g239">
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use233" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use235" />
+              <use
+                 xlink:href="#Futura-Medium-33"
+                 x="92.578125"
+                 id="use237" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="ytick_5">
+          <g
+             id="line2d_15">
+            <path
+               d="M 135,201.82322 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path243" />
+          </g>
+          <g
+             id="text_16">
+            <!-- 0.4 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,97.140625,210.0701)"
+               id="g252">
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use246" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use248" />
+              <use
+                 xlink:href="#Futura-Medium-34"
+                 x="92.578125"
+                 id="use250" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="ytick_6">
+          <g
+             id="line2d_16">
+            <path
+               d="M 135,124.11903 H 972"
+               clip-path="url(#pa228791ba9)"
+               style="fill:none;stroke:#d3d3d3;stroke-width:0.8;stroke-linecap:square;stroke-opacity:0.4"
+               id="path256" />
+          </g>
+          <g
+             id="text_17">
+            <!-- 0.5 -->
+            <g
+               style="fill:#444444"
+               transform="matrix(0.2,0,0,-0.2,97.140625,132.3659)"
+               id="g265">
+              <use
+                 xlink:href="#Futura-Medium-30"
+                 id="use259" />
+              <use
+                 xlink:href="#Futura-Medium-2e"
+                 x="61.71875"
+                 id="use261" />
+              <use
+                 xlink:href="#Futura-Medium-35"
+                 x="92.578125"
+                 id="use263" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="text_18">
+          <!-- proportion of paths -->
+          <g
+             style="fill:#444444"
+             transform="matrix(0,-0.22,-0.22,0,71.448125,387.80203)"
+             id="g313">
+            <defs
+               id="defs273">
+              <path
+                 id="Futura-Medium-72"
+                 d="m 444,3044 h 703 v -272 q 194,203 344,278 153,78 362,78 278,0 581,-181 l -321,-644 q -200,144 -391,144 -575,0 -575,-869 V 0 H 444 Z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-69"
+                 d="M 1147,3044 V 0 H 444 V 3044 Z M 338,4309 q 0,185 134,319 134,135 322,135 190,0 325,-135 134,-131 134,-322 0,-190 -134,-325 -131,-134 -322,-134 -191,0 -325,134 -134,135 -134,328 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-6e"
+                 d="m 444,3044 h 706 v -281 q 369,365 831,365 532,0 828,-334 257,-285 257,-928 V 0 h -707 v 1700 q 0,450 -125,622 -121,175 -443,175 -350,0 -497,-231 -144,-228 -144,-797 V 0 H 444 Z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-68"
+                 d="m 444,5278 h 703 V 2791 q 375,337 828,337 516,0 825,-334 263,-291 263,-928 V 0 h -704 v 1800 q 0,366 -130,530 -129,164 -416,164 -369,0 -519,-228 -147,-232 -147,-794 V 0 H 444 Z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <use
+               xlink:href="#Futura-Medium-70"
+               id="use275" />
+            <use
+               xlink:href="#Futura-Medium-72"
+               x="59.960938"
+               id="use277" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="96.488281"
+               id="use279" />
+            <use
+               xlink:href="#Futura-Medium-70"
+               x="156.5957"
+               id="use281" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="216.55664"
+               id="use283" />
+            <use
+               xlink:href="#Futura-Medium-72"
+               x="276.66406"
+               id="use285" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="317.69141"
+               id="use287" />
+            <use
+               xlink:href="#Futura-Medium-69"
+               x="345.03516"
+               id="use289" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="369.9375"
+               id="use291" />
+            <use
+               xlink:href="#Futura-Medium-6e"
+               x="430.04492"
+               id="use293" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="484.87891"
+               id="use295" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="515.73828"
+               id="use297" />
+            <use
+               xlink:href="#Futura-Medium-66"
+               x="575.8457"
+               id="use299" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="605.5332"
+               id="use301" />
+            <use
+               xlink:href="#Futura-Medium-70"
+               x="636.39258"
+               id="use303" />
+            <use
+               xlink:href="#Futura-Medium-61"
+               x="696.35352"
+               id="use305" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="756.31445"
+               id="use307" />
+            <use
+               xlink:href="#Futura-Medium-68"
+               x="785.6582"
+               id="use309" />
+            <use
+               xlink:href="#Futura-Medium-73"
+               x="840.49219"
+               id="use311" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="patch_3">
+        <path
+           d="m 210.16297,512.64 h 27.83814 v -54.93687 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path317" />
+      </g>
+      <g
+         id="patch_4">
+        <path
+           d="m 287.49113,512.64 h 27.83814 v -63.40662 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path320" />
+      </g>
+      <g
+         id="patch_5">
+        <path
+           d="m 364.81929,512.64 h 27.83814 v -51.75099 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path323" />
+      </g>
+      <g
+         id="patch_6">
+        <path
+           d="m 442.14745,512.64 h 27.83814 v -44.67991 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path326" />
+      </g>
+      <g
+         id="patch_7">
+        <path
+           d="m 519.47561,512.64 h 27.83814 v -38.07505 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path329" />
+      </g>
+      <g
+         id="patch_8">
+        <path
+           d="m 596.80377,512.64 h 27.83814 v -30.53775 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path332" />
+      </g>
+      <g
+         id="patch_9">
+        <path
+           d="m 674.13193,512.64 h 27.83814 v -24.94305 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path335" />
+      </g>
+      <g
+         id="patch_10">
+        <path
+           d="m 751.46009,512.64 h 27.83814 v -25.40927 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path338" />
+      </g>
+      <g
+         id="patch_11">
+        <path
+           d="m 828.78825,512.64 h 27.83814 v -20.90243 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path341" />
+      </g>
+      <g
+         id="patch_12">
+        <path
+           d="m 906.11641,512.64 h 27.83814 V 90.24 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#d3d3d3"
+           id="path344" />
+      </g>
+      <g
+         id="patch_13">
+        <path
+           d="m 173.04545,512.64 h 27.83814 v -98.15267 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path347" />
+      </g>
+      <g
+         id="patch_14">
+        <path
+           d="m 250.37361,512.64 h 27.83814 V 349.05222 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path350" />
+      </g>
+      <g
+         id="patch_15">
+        <path
+           d="m 327.70177,512.64 h 27.83814 V 328.60375 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path353" />
+      </g>
+      <g
+         id="patch_16">
+        <path
+           d="m 405.02993,512.64 h 27.83814 V 377.68008 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path356" />
+      </g>
+      <g
+         id="patch_17">
+        <path
+           d="m 482.35809,512.64 h 27.83814 V 406.30795 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path359" />
+      </g>
+      <g
+         id="patch_18">
+        <path
+           d="m 559.68625,512.64 h 27.83814 v -61.34542 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path362" />
+      </g>
+      <g
+         id="patch_19">
+        <path
+           d="m 637.01441,512.64 h 27.83814 v -16.35878 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path365" />
+      </g>
+      <g
+         id="patch_20">
+        <path
+           d="m 714.34257,512.64 h 27.83814 v 0 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path368" />
+      </g>
+      <g
+         id="patch_21">
+        <path
+           d="m 791.67073,512.64 h 27.83814 v 0 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path371" />
+      </g>
+      <g
+         id="patch_22">
+        <path
+           d="m 868.99889,512.64 h 27.83814 v -12.26908 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#f2ad48"
+           id="path374" />
+      </g>
+      <g
+         id="patch_23">
+        <path
+           d="M 135,512.64 V 69.12"
+           style="fill:none;stroke:#ffffff;stroke-linecap:square;stroke-linejoin:miter"
+           id="path377" />
+      </g>
+      <g
+         id="patch_24">
+        <path
+           d="M 972,512.64 V 69.12"
+           style="fill:none;stroke:#ffffff;stroke-linecap:square;stroke-linejoin:miter"
+           id="path380" />
+      </g>
+      <g
+         id="patch_25">
+        <path
+           d="M 135,512.64 H 972"
+           style="fill:none;stroke:#ffffff;stroke-linecap:square;stroke-linejoin:miter"
+           id="path383" />
+      </g>
+      <g
+         id="patch_26">
+        <path
+           d="M 135,69.12 H 972"
+           style="fill:none;stroke:#ffffff;stroke-linecap:square;stroke-linejoin:miter"
+           id="path386" />
+      </g>
+      <g
+         id="patch_27">
+        <path
+           d="m 191.60421,512.64 h 27.83814 v -94.06297 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path389" />
+      </g>
+      <g
+         id="patch_28">
+        <path
+           d="m 268.93237,512.64 h 27.83814 V 369.50069 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path392" />
+      </g>
+      <g
+         id="patch_29">
+        <path
+           d="m 346.26053,512.64 h 27.83814 V 349.05222 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path395" />
+      </g>
+      <g
+         id="patch_30">
+        <path
+           d="m 423.58869,512.64 h 27.83814 V 377.68008 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path398" />
+      </g>
+      <g
+         id="patch_31">
+        <path
+           d="m 500.91685,512.64 h 27.83814 V 398.12856 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path401" />
+      </g>
+      <g
+         id="patch_32">
+        <path
+           d="m 578.24501,512.64 h 27.83814 v -57.25572 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path404" />
+      </g>
+      <g
+         id="patch_33">
+        <path
+           d="m 655.57317,512.64 h 27.83814 v -24.53817 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path407" />
+      </g>
+      <g
+         id="patch_34">
+        <path
+           d="m 732.90133,512.64 h 27.83814 v -4.08969 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path410" />
+      </g>
+      <g
+         id="patch_35">
+        <path
+           d="m 810.22949,512.64 h 27.83814 v 0 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path413" />
+      </g>
+      <g
+         id="patch_36">
+        <path
+           d="m 887.55765,512.64 h 27.83814 v -40.89694 h -27.83814 z"
+           clip-path="url(#pa228791ba9)"
+           style="fill:#99a3fd"
+           id="path416" />
+      </g>
+      <g
+         id="legend_1">
+        <g
+           id="patch_37">
+          <path
+             d="m 146.2,157.925 h 145.9325 q 3.2,0 3.2,-3.2 V 80.32 q 0,-3.2 -3.2,-3.2 H 146.2 q -3.2,0 -3.2,3.2 v 74.405 q 0,3.2 3.2,3.2 z"
+             style="opacity:0.8;fill:#e5e5e5;stroke:#cccccc;stroke-width:0.5;stroke-linejoin:miter"
+             id="path419" />
+        </g>
+        <g
+           id="patch_38">
+          <path
+             d="m 149.4,96.715 h 32 v -11.2 h -32 z"
+             style="fill:#f2ad48"
+             id="path422" />
+        </g>
+        <g
+           id="text_19">
+          <!-- shortest path -->
+          <g
+             style="fill:#444444"
+             transform="matrix(0.16,0,0,-0.16,194.2,96.715)"
+             id="g451">
+            <use
+               xlink:href="#Futura-Medium-73"
+               id="use425" />
+            <use
+               xlink:href="#Futura-Medium-68"
+               x="40.576172"
+               id="use427" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="95.410156"
+               id="use429" />
+            <use
+               xlink:href="#Futura-Medium-72"
+               x="155.51758"
+               id="use431" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="196.54492"
+               id="use433" />
+            <use
+               xlink:href="#Futura-Medium-65"
+               x="224.76367"
+               id="use435" />
+            <use
+               xlink:href="#Futura-Medium-73"
+               x="280.08594"
+               id="use437" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="320.66211"
+               id="use439" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="348.00586"
+               id="use441" />
+            <use
+               xlink:href="#Futura-Medium-70"
+               x="378.86523"
+               id="use443" />
+            <use
+               xlink:href="#Futura-Medium-61"
+               x="438.82617"
+               id="use445" />
+            <use
+               xlink:href="#Futura-Medium-74"
+               x="498.78711"
+               id="use447" />
+            <use
+               xlink:href="#Futura-Medium-68"
+               x="528.13086"
+               id="use449" />
+          </g>
+        </g>
+        <g
+           id="patch_39">
+          <path
+             d="m 149.4,122.05 h 32 v -11.2 h -32 z"
+             style="fill:#99a3fd"
+             id="path454" />
+        </g>
+        <g
+           id="text_20">
+          <!-- ILQL -->
+          <g
+             style="fill:#444444"
+             transform="matrix(0.16,0,0,-0.16,194.2,122.05)"
+             id="g470">
+            <defs
+               id="defs460">
+              <path
+                 id="Futura-Medium-49"
+                 d="M 1306,4825 V 0 H 578 v 4825 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-4c"
+                 d="M 1306,4825 V 684 H 2725 V 0 H 578 v 4825 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-51"
+                 d="M 5488,-88 H 4572 L 4194,300 Q 3591,-88 2850,-88 q -959,0 -1703,651 -809,715 -809,1828 0,1090 765,1818 744,707 1756,707 919,0 1647,-619 875,-744 875,-1941 0,-937 -690,-1665 z m -2004,1997 700,-696 q 463,481 463,1190 0,778 -516,1303 -515,525 -1281,525 -775,0 -1275,-525 -503,-522 -503,-1322 0,-781 519,-1278 540,-512 1234,-512 472,0 853,215 L 2544,1909 Z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <use
+               xlink:href="#Futura-Medium-49"
+               id="use462" />
+            <use
+               xlink:href="#Futura-Medium-4c"
+               x="29.492188"
+               id="use464" />
+            <use
+               xlink:href="#Futura-Medium-51"
+               x="73.828125"
+               id="use466" />
+            <use
+               xlink:href="#Futura-Medium-4c"
+               x="163.18359"
+               id="use468" />
+          </g>
+        </g>
+        <g
+           id="patch_40">
+          <path
+             d="m 149.4,147.385 h 32 v -11.2 h -32 z"
+             style="fill:#d3d3d3"
+             id="path473" />
+        </g>
+        <g
+           id="text_21">
+          <!-- random walk -->
+          <g
+             style="fill:#444444"
+             transform="matrix(0.16,0,0,-0.16,194.2,147.385)"
+             id="g504">
+            <defs
+               id="defs480">
+              <path
+                 id="Futura-Medium-64"
+                 d="m 2688,5278 h 706 V 0 H 2688 V 319 Q 2272,-88 1747,-88 1122,-88 709,369 300,834 300,1531 q 0,682 409,1138 407,459 1022,459 535,0 957,-437 z M 1019,1531 q 0,-437 234,-712 241,-278 606,-278 391,0 632,268 240,279 240,707 0,428 -240,706 -241,272 -625,272 -363,0 -607,-275 -240,-278 -240,-688 z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-6d"
+                 d="m 444,3044 h 703 v -281 q 203,212 347,287 153,78 384,78 516,0 816,-450 331,450 897,450 1028,0 1028,-1247 V 0 h -706 v 1691 q 0,437 -107,618 -109,185 -359,185 -291,0 -424,-219 -132,-219 -132,-703 V 0 h -707 v 1681 q 0,813 -468,813 -297,0 -433,-222 -136,-222 -136,-700 V 0 H 444 Z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-77"
+                 d="m 825,3044 797,-1738 859,2016 866,-2016 787,1738 h 788 L 3328,-228 2481,1731 1625,-228 34,3044 Z"
+                 transform="scale(0.015625)" />
+              <path
+                 id="Futura-Medium-6b"
+                 d="M 1147,5278 V 2059 l 991,985 h 943 L 1759,1766 3178,0 H 2266 L 1259,1284 1147,1172 V 0 H 444 v 5278 z"
+                 transform="scale(0.015625)" />
+            </defs>
+            <use
+               xlink:href="#Futura-Medium-72"
+               id="use482" />
+            <use
+               xlink:href="#Futura-Medium-61"
+               x="36.777344"
+               id="use484" />
+            <use
+               xlink:href="#Futura-Medium-6e"
+               x="96.738281"
+               id="use486" />
+            <use
+               xlink:href="#Futura-Medium-64"
+               x="151.57227"
+               id="use488" />
+            <use
+               xlink:href="#Futura-Medium-6f"
+               x="211.5332"
+               id="use490" />
+            <use
+               xlink:href="#Futura-Medium-6d"
+               x="271.64062"
+               id="use492" />
+            <use
+               xlink:href="#Futura-Medium-20"
+               x="350.74219"
+               id="use494" />
+            <use
+               xlink:href="#Futura-Medium-77"
+               x="381.60156"
+               id="use496" />
+            <use
+               xlink:href="#Futura-Medium-61"
+               x="457.36914"
+               id="use498" />
+            <use
+               xlink:href="#Futura-Medium-6c"
+               x="517.33008"
+               id="use500" />
+            <use
+               xlink:href="#Futura-Medium-6b"
+               x="542.23242"
+               id="use502" />
+          </g>
+        </g>
+      </g>
+    </g>
   </g>
-  <g id="axes_1">
-   <g id="patch_2">
-    <path d="M 135 512.64 
-L 972 512.64 
-L 972 69.12 
-L 135 69.12 
-z
-" style="fill: #ffffff"/>
-   </g>
-   <g id="matplotlib.axis_1">
-    <g id="xtick_1">
-     <g id="line2d_1">
-      <path d="M 205.523282 512.64 
-L 205.523282 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_1">
-      <!-- 1 -->
-      <g style="fill: #555555" transform="translate(199.351407 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-31" d="M 1734 4144 
-L 900 4144 
-L 1300 4825 
-L 2463 4825 
-L 2463 0 
-L 1734 0 
-L 1734 4144 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-31"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_2">
-     <g id="line2d_2">
-      <path d="M 282.851441 512.64 
-L 282.851441 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_2">
-      <!-- 2 -->
-      <g style="fill: #555555" transform="translate(276.679566 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-32" d="M 1603 684 
-L 3400 684 
-L 3400 0 
-L 159 0 
-L 1834 2028 
-Q 2081 2331 2248 2553 
-Q 2416 2775 2503 2925 
-Q 2681 3219 2681 3453 
-Q 2681 3791 2443 4019 
-Q 2206 4247 1856 4247 
-Q 1125 4247 1019 3381 
-L 294 3381 
-Q 469 4906 1834 4906 
-Q 2494 4906 2941 4488 
-Q 3391 4069 3391 3450 
-Q 3391 3056 3181 2678 
-Q 3075 2481 2870 2211 
-Q 2666 1941 2353 1572 
-L 1603 684 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-32"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_3">
-     <g id="line2d_3">
-      <path d="M 360.179601 512.64 
-L 360.179601 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_3">
-      <!-- 3 -->
-      <g style="fill: #555555" transform="translate(354.007726 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-33" d="M 1656 2241 
-L 1656 2863 
-Q 2119 2863 2278 2966 
-Q 2563 3147 2563 3547 
-Q 2563 3856 2356 4050 
-Q 2153 4247 1828 4247 
-Q 1525 4247 1359 4100 
-Q 1200 3950 1122 3594 
-L 397 3594 
-Q 509 4275 859 4592 
-Q 1209 4909 1838 4909 
-Q 2472 4909 2872 4534 
-Q 3272 4163 3272 3575 
-Q 3272 2913 2747 2544 
-Q 3347 2191 3347 1397 
-Q 3347 747 2909 334 
-Q 2472 -78 1788 -78 
-Q 916 -78 494 563 
-Q 319 831 272 1306 
-L 975 1306 
-Q 1031 956 1248 770 
-Q 1466 584 1816 584 
-Q 2169 584 2400 819 
-Q 2631 1059 2631 1428 
-Q 2631 1916 2284 2122 
-Q 2081 2241 1656 2241 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-33"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_4">
-     <g id="line2d_4">
-      <path d="M 437.507761 512.64 
-L 437.507761 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_4">
-      <!-- 4 -->
-      <g style="fill: #555555" transform="translate(431.335886 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-34" d="M 3156 1347 
-L 3669 1347 
-L 3669 684 
-L 3156 684 
-L 3156 0 
-L 2428 0 
-L 2428 684 
-L 59 684 
-L 3156 5184 
-L 3156 1347 
-z
-M 2428 1347 
-L 2428 2963 
-L 1316 1347 
-L 2428 1347 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-34"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_5">
-     <g id="line2d_5">
-      <path d="M 514.83592 512.64 
-L 514.83592 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_5">
-      <!-- 5 -->
-      <g style="fill: #555555" transform="translate(508.664045 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-35" d="M 3366 4144 
-L 1878 4144 
-L 1641 3344 
-Q 1694 3350 1742 3353 
-Q 1791 3356 1831 3356 
-Q 2534 3356 2984 2881 
-Q 3438 2409 3438 1672 
-Q 3438 909 2925 415 
-Q 2413 -78 1634 -78 
-Q 675 -78 122 822 
-L 672 1288 
-Q 900 900 1131 741 
-Q 1363 584 1697 584 
-Q 2134 584 2431 891 
-Q 2728 1206 2728 1656 
-Q 2728 2119 2434 2413 
-Q 2141 2716 1700 2716 
-Q 1209 2716 853 2288 
-L 613 2288 
-L 1372 4825 
-L 3366 4825 
-L 3366 4144 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-35"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_6">
-     <g id="line2d_6">
-      <path d="M 592.16408 512.64 
-L 592.16408 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_6">
-      <!-- 6 -->
-      <g style="fill: #555555" transform="translate(585.992205 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-36" d="M 2513 4994 
-L 3047 4594 
-L 1894 3025 
-Q 1988 3038 2053 3044 
-Q 2119 3050 2156 3050 
-Q 2744 3050 3172 2600 
-Q 3597 2156 3597 1531 
-Q 3597 869 3122 394 
-Q 2650 -78 1988 -78 
-Q 1331 -78 838 388 
-Q 353 853 353 1491 
-Q 353 2063 825 2703 
-L 2513 4994 
-z
-M 2888 1484 
-Q 2888 1869 2622 2134 
-Q 2353 2403 1975 2403 
-Q 1594 2403 1328 2137 
-Q 1063 1872 1063 1494 
-Q 1063 1116 1328 850 
-Q 1594 584 1978 584 
-Q 2353 584 2619 850 
-Q 2888 1119 2888 1484 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-36"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_7">
-     <g id="line2d_7">
-      <path d="M 669.492239 512.64 
-L 669.492239 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_7">
-      <!-- 7 -->
-      <g style="fill: #555555" transform="translate(663.320364 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-37" d="M 2713 4144 
-L 331 4144 
-L 331 4825 
-L 3928 4825 
-L 884 -166 
-L 306 200 
-L 2713 4144 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-37"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_8">
-     <g id="line2d_8">
-      <path d="M 746.820399 512.64 
-L 746.820399 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_8">
-      <!-- 8 -->
-      <g style="fill: #555555" transform="translate(740.648524 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-38" d="M 1113 2509 
-Q 581 2884 581 3531 
-Q 581 4119 984 4513 
-Q 1391 4906 1994 4906 
-Q 2594 4906 2994 4513 
-Q 3394 4122 3394 3528 
-Q 3394 2906 2866 2513 
-Q 3156 2356 3322 2056 
-Q 3491 1756 3491 1381 
-Q 3491 741 3072 331 
-Q 2653 -78 2000 -78 
-Q 1331 -78 897 334 
-Q 459 747 459 1372 
-Q 459 2184 1113 2509 
-z
-M 1266 3534 
-Q 1266 3225 1475 3016 
-Q 1688 2803 1988 2803 
-Q 2284 2803 2496 3015 
-Q 2709 3228 2709 3525 
-Q 2709 3822 2496 4034 
-Q 2284 4247 1988 4247 
-Q 1691 4247 1478 4034 
-Q 1266 3822 1266 3534 
-z
-M 1175 1397 
-Q 1175 1063 1406 822 
-Q 1641 584 1975 584 
-Q 2306 584 2541 819 
-Q 2775 1056 2775 1388 
-Q 2775 1722 2540 1956 
-Q 2306 2191 1975 2191 
-Q 1647 2191 1409 1956 
-Q 1175 1722 1175 1397 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-38"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_9">
-     <g id="line2d_9">
-      <path d="M 824.148559 512.64 
-L 824.148559 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_9">
-      <!-- 9 -->
-      <g style="fill: #555555" transform="translate(817.976684 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-39" d="M 1438 -166 
-L 903 231 
-L 2056 1803 
-Q 1963 1791 1897 1784 
-Q 1831 1778 1791 1778 
-Q 1206 1778 778 2225 
-Q 353 2669 353 3294 
-Q 353 3959 825 4431 
-Q 1300 4906 1963 4906 
-Q 2622 4906 3109 4438 
-Q 3597 3972 3597 3338 
-Q 3597 2775 3122 2122 
-L 1438 -166 
-z
-M 1063 3347 
-Q 1063 2956 1328 2691 
-Q 1597 2422 1975 2422 
-Q 2353 2422 2619 2688 
-Q 2888 2956 2888 3334 
-Q 2888 3713 2619 3981 
-Q 2353 4247 1972 4247 
-Q 1597 4247 1331 3981 
-Q 1063 3713 1063 3347 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-39"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_10">
-     <g id="line2d_10">
-      <path d="M 901.476718 512.64 
-L 901.476718 69.12 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_10">
-      <!-- ∞ -->
-      <g style="fill: #555555" transform="translate(893.937656 536.13375)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-221e" d="M 2431 1988 
-Q 1922 1319 1269 1319 
-Q 766 1319 447 1638 
-Q 128 1959 128 2469 
-Q 128 2963 450 3284 
-Q 772 3606 1269 3606 
-Q 1906 3606 2400 2941 
-Q 2881 3606 3563 3606 
-Q 4069 3606 4381 3284 
-Q 4700 2966 4700 2459 
-Q 4700 1959 4381 1638 
-Q 4069 1316 3572 1316 
-Q 2909 1316 2431 1988 
-z
-M 2772 2463 
-Q 3119 1931 3472 1931 
-Q 3691 1931 3838 2081 
-Q 3984 2238 3984 2463 
-Q 3984 2681 3834 2838 
-Q 3691 2991 3469 2991 
-Q 3119 2991 2772 2463 
-z
-M 2056 2463 
-Q 1716 2991 1353 2991 
-Q 1134 2991 991 2838 
-Q 844 2681 844 2463 
-Q 844 2241 991 2084 
-Q 1141 1931 1359 1931 
-Q 1713 1931 2056 2463 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-221e"/>
-      </g>
-     </g>
-    </g>
-    <g id="text_11">
-     <!-- # of steps to goal -->
-     <g style="fill: #555555" transform="translate(466.319844 563.744063)scale(0.22 -0.22)">
-      <defs>
-       <path id="Futura-Medium-23" d="M 3834 3469 
-L 3834 2919 
-L 3075 2919 
-L 2963 2022 
-L 3656 2022 
-L 3656 1472 
-L 2894 1472 
-L 2709 -22 
-L 2159 50 
-L 2338 1472 
-L 1409 1472 
-L 1222 -22 
-L 666 50 
-L 844 1484 
-L 131 1484 
-L 131 2022 
-L 922 2022 
-L 1034 2919 
-L 313 2919 
-L 313 3469 
-L 1103 3469 
-L 1275 4869 
-L 1822 4797 
-L 1656 3469 
-L 2578 3469 
-L 2753 4869 
-L 3300 4797 
-L 3134 3469 
-L 3834 3469 
-z
-M 2509 2919 
-L 1591 2919 
-L 1478 2022 
-L 2403 2022 
-L 2509 2919 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-20" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-6f" d="M 300 1544 
-Q 300 2203 772 2665 
-Q 1244 3128 1922 3128 
-Q 2603 3128 3078 2663 
-Q 3547 2197 3547 1519 
-Q 3547 834 3075 372 
-Q 2600 -88 1909 -88 
-Q 1225 -88 763 381 
-Q 300 844 300 1544 
-z
-M 1019 1531 
-Q 1019 1075 1263 809 
-Q 1513 541 1922 541 
-Q 2334 541 2581 806 
-Q 2828 1072 2828 1516 
-Q 2828 1959 2581 2225 
-Q 2331 2494 1922 2494 
-Q 1519 2494 1269 2225 
-Q 1019 1956 1019 1531 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-66" d="M 1172 2388 
-L 1172 0 
-L 466 0 
-L 466 2388 
-L 216 2388 
-L 216 3044 
-L 466 3044 
-L 466 4219 
-Q 466 4794 666 5031 
-Q 941 5363 1466 5363 
-Q 1653 5363 1938 5253 
-L 1938 4534 
-L 1866 4572 
-Q 1638 4688 1491 4688 
-Q 1303 4688 1238 4553 
-Q 1172 4422 1172 4047 
-L 1172 3044 
-L 1938 3044 
-L 1938 2388 
-L 1172 2388 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-73" d="M 2213 2525 
-L 1631 2216 
-Q 1494 2497 1291 2497 
-Q 1194 2497 1125 2433 
-Q 1056 2369 1056 2269 
-Q 1056 2094 1463 1922 
-Q 2022 1681 2215 1478 
-Q 2409 1275 2409 931 
-Q 2409 491 2084 194 
-Q 1769 -88 1322 -88 
-Q 556 -88 238 659 
-L 838 938 
-Q 963 719 1028 659 
-Q 1156 541 1334 541 
-Q 1691 541 1691 866 
-Q 1691 1053 1416 1216 
-Q 1309 1269 1203 1319 
-Q 1097 1369 988 1422 
-Q 681 1572 556 1722 
-Q 397 1913 397 2213 
-Q 397 2609 669 2869 
-Q 947 3128 1344 3128 
-Q 1928 3128 2213 2525 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-74" d="M 1169 2388 
-L 1169 0 
-L 466 0 
-L 466 2388 
-L 166 2388 
-L 166 3044 
-L 466 3044 
-L 466 4159 
-L 1169 4159 
-L 1169 3044 
-L 1716 3044 
-L 1716 2388 
-L 1169 2388 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-65" d="M 3216 1356 
-L 1034 1356 
-Q 1063 981 1278 759 
-Q 1494 541 1831 541 
-Q 2094 541 2266 666 
-Q 2434 791 2650 1128 
-L 3244 797 
-Q 3106 563 2953 395 
-Q 2800 228 2625 120 
-Q 2450 13 2247 -37 
-Q 2044 -88 1806 -88 
-Q 1125 -88 713 350 
-Q 300 791 300 1519 
-Q 300 2241 700 2688 
-Q 1103 3128 1769 3128 
-Q 2441 3128 2831 2700 
-Q 3219 2275 3219 1522 
-L 3216 1356 
-z
-M 2494 1931 
-Q 2347 2494 1784 2494 
-Q 1656 2494 1543 2455 
-Q 1431 2416 1339 2342 
-Q 1247 2269 1181 2166 
-Q 1116 2063 1081 1931 
-L 2494 1931 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-70" d="M 1147 -1656 
-L 444 -1656 
-L 444 3044 
-L 1147 3044 
-L 1147 2713 
-Q 1563 3128 2091 3128 
-Q 2719 3128 3125 2666 
-Q 3538 2206 3538 1506 
-Q 3538 822 3128 366 
-Q 2722 -88 2103 -88 
-Q 1569 -88 1147 341 
-L 1147 -1656 
-z
-M 2819 1503 
-Q 2819 1941 2581 2216 
-Q 2341 2494 1975 2494 
-Q 1588 2494 1347 2225 
-Q 1106 1956 1106 1519 
-Q 1106 1091 1347 813 
-Q 1584 541 1972 541 
-Q 2338 541 2575 816 
-Q 2819 1091 2819 1503 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-67" d="M 3388 72 
-Q 3388 -144 3373 -308 
-Q 3359 -472 3334 -597 
-Q 3259 -941 3041 -1188 
-Q 2628 -1663 1906 -1663 
-Q 1297 -1663 903 -1334 
-Q 497 -997 434 -400 
-L 1141 -400 
-Q 1181 -625 1275 -747 
-Q 1494 -1031 1913 -1031 
-Q 2684 -1031 2684 -84 
-L 2684 341 
-Q 2266 -88 1719 -88 
-Q 1097 -88 700 363 
-Q 300 819 300 1503 
-Q 300 2169 672 2634 
-Q 1072 3128 1728 3128 
-Q 2303 3128 2684 2700 
-L 2684 3044 
-L 3388 3044 
-L 3388 72 
-z
-M 2713 1516 
-Q 2713 1959 2475 2225 
-Q 2234 2497 1859 2497 
-Q 1459 2497 1228 2200 
-Q 1019 1934 1019 1513 
-Q 1019 1097 1228 831 
-Q 1456 541 1859 541 
-Q 2263 541 2497 834 
-Q 2713 1100 2713 1516 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-61" d="M 2688 3044 
-L 3394 3044 
-L 3394 0 
-L 2688 0 
-L 2688 319 
-Q 2253 -88 1753 -88 
-Q 1122 -88 709 369 
-Q 300 834 300 1531 
-Q 300 2216 709 2672 
-Q 1119 3128 1734 3128 
-Q 2266 3128 2688 2691 
-L 2688 3044 
-z
-M 1019 1531 
-Q 1019 1094 1253 819 
-Q 1494 541 1859 541 
-Q 2250 541 2491 809 
-Q 2731 1088 2731 1516 
-Q 2731 1944 2491 2222 
-Q 2250 2494 1866 2494 
-Q 1503 2494 1259 2219 
-Q 1019 1941 1019 1531 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-6c" d="M 1147 5278 
-L 1147 0 
-L 444 0 
-L 444 5278 
-L 1147 5278 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#Futura-Medium-23"/>
-      <use xlink:href="#Futura-Medium-20" x="61.71875"/>
-      <use xlink:href="#Futura-Medium-6f" x="92.578125"/>
-      <use xlink:href="#Futura-Medium-66" x="152.685547"/>
-      <use xlink:href="#Futura-Medium-20" x="182.373047"/>
-      <use xlink:href="#Futura-Medium-73" x="213.232422"/>
-      <use xlink:href="#Futura-Medium-74" x="253.808594"/>
-      <use xlink:href="#Futura-Medium-65" x="282.027344"/>
-      <use xlink:href="#Futura-Medium-70" x="337.349609"/>
-      <use xlink:href="#Futura-Medium-73" x="397.310547"/>
-      <use xlink:href="#Futura-Medium-20" x="437.886719"/>
-      <use xlink:href="#Futura-Medium-74" x="468.746094"/>
-      <use xlink:href="#Futura-Medium-6f" x="496.714844"/>
-      <use xlink:href="#Futura-Medium-20" x="556.822266"/>
-      <use xlink:href="#Futura-Medium-67" x="587.681641"/>
-      <use xlink:href="#Futura-Medium-6f" x="647.544922"/>
-      <use xlink:href="#Futura-Medium-61" x="707.652344"/>
-      <use xlink:href="#Futura-Medium-6c" x="767.613281"/>
-     </g>
-    </g>
-   </g>
-   <g id="matplotlib.axis_2">
-    <g id="ytick_1">
-     <g id="line2d_11">
-      <path d="M 135 512.64 
-L 972 512.64 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_12">
-      <!-- 0.0 -->
-      <g style="fill: #555555" transform="translate(97.140625 520.886875)scale(0.2 -0.2)">
-       <defs>
-        <path id="Futura-Medium-30" d="M 272 2444 
-Q 272 3597 809 4284 
-Q 1291 4906 1975 4906 
-Q 2659 4906 3141 4284 
-Q 3678 3597 3678 2413 
-Q 3678 1231 3141 544 
-Q 2659 -78 1978 -78 
-Q 1297 -78 809 544 
-Q 272 1231 272 2444 
-z
-M 988 2441 
-Q 988 1638 1266 1106 
-Q 1544 584 1975 584 
-Q 2403 584 2684 1106 
-Q 2966 1625 2966 2416 
-Q 2966 3206 2684 3728 
-Q 2403 4247 1975 4247 
-Q 1550 4247 1269 3728 
-Q 988 3213 988 2441 
-z
-" transform="scale(0.015625)"/>
-        <path id="Futura-Medium-2e" d="M 553 350 
-Q 553 525 681 653 
-Q 809 781 988 781 
-Q 1166 781 1294 653 
-Q 1422 525 1422 347 
-Q 1422 166 1294 38 
-Q 1169 -88 988 -88 
-Q 803 -88 678 37 
-Q 553 163 553 350 
-z
-" transform="scale(0.015625)"/>
-       </defs>
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-30" x="92.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_2">
-     <g id="line2d_12">
-      <path d="M 135 434.935806 
-L 972 434.935806 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_13">
-      <!-- 0.1 -->
-      <g style="fill: #555555" transform="translate(98.740625 443.182681)scale(0.2 -0.2)">
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-31" x="84.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_3">
-     <g id="line2d_13">
-      <path d="M 135 357.231611 
-L 972 357.231611 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_14">
-      <!-- 0.2 -->
-      <g style="fill: #555555" transform="translate(97.140625 365.478486)scale(0.2 -0.2)">
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-32" x="92.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_4">
-     <g id="line2d_14">
-      <path d="M 135 279.527417 
-L 972 279.527417 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_15">
-      <!-- 0.3 -->
-      <g style="fill: #555555" transform="translate(97.140625 287.774292)scale(0.2 -0.2)">
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-33" x="92.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_5">
-     <g id="line2d_15">
-      <path d="M 135 201.823223 
-L 972 201.823223 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_16">
-      <!-- 0.4 -->
-      <g style="fill: #555555" transform="translate(97.140625 210.070098)scale(0.2 -0.2)">
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-34" x="92.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_6">
-     <g id="line2d_16">
-      <path d="M 135 124.119029 
-L 972 124.119029 
-" clip-path="url(#p5dce1de818)" style="fill: none; stroke: #d3d3d3; stroke-opacity: 0.4; stroke-width: 0.8; stroke-linecap: square"/>
-     </g>
-     <g id="text_17">
-      <!-- 0.5 -->
-      <g style="fill: #555555" transform="translate(97.140625 132.365904)scale(0.2 -0.2)">
-       <use xlink:href="#Futura-Medium-30"/>
-       <use xlink:href="#Futura-Medium-2e" x="61.71875"/>
-       <use xlink:href="#Futura-Medium-35" x="92.578125"/>
-      </g>
-     </g>
-    </g>
-    <g id="text_18">
-     <!-- proportion of paths -->
-     <g style="fill: #555555" transform="translate(87.448125 387.802031)rotate(-90)scale(0.22 -0.22)">
-      <defs>
-       <path id="Futura-Medium-72" d="M 444 3044 
-L 1147 3044 
-L 1147 2772 
-Q 1341 2975 1491 3050 
-Q 1644 3128 1853 3128 
-Q 2131 3128 2434 2947 
-L 2113 2303 
-Q 1913 2447 1722 2447 
-Q 1147 2447 1147 1578 
-L 1147 0 
-L 444 0 
-L 444 3044 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-69" d="M 1147 3044 
-L 1147 0 
-L 444 0 
-L 444 3044 
-L 1147 3044 
-z
-M 338 4309 
-Q 338 4494 472 4628 
-Q 606 4763 794 4763 
-Q 984 4763 1119 4628 
-Q 1253 4497 1253 4306 
-Q 1253 4116 1119 3981 
-Q 988 3847 797 3847 
-Q 606 3847 472 3981 
-Q 338 4116 338 4309 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-6e" d="M 444 3044 
-L 1150 3044 
-L 1150 2763 
-Q 1519 3128 1981 3128 
-Q 2513 3128 2809 2794 
-Q 3066 2509 3066 1866 
-L 3066 0 
-L 2359 0 
-L 2359 1700 
-Q 2359 2150 2234 2322 
-Q 2113 2497 1791 2497 
-Q 1441 2497 1294 2266 
-Q 1150 2038 1150 1469 
-L 1150 0 
-L 444 0 
-L 444 3044 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-68" d="M 444 5278 
-L 1147 5278 
-L 1147 2791 
-Q 1522 3128 1975 3128 
-Q 2491 3128 2800 2794 
-Q 3063 2503 3063 1866 
-L 3063 0 
-L 2359 0 
-L 2359 1800 
-Q 2359 2166 2229 2330 
-Q 2100 2494 1813 2494 
-Q 1444 2494 1294 2266 
-Q 1147 2034 1147 1472 
-L 1147 0 
-L 444 0 
-L 444 5278 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#Futura-Medium-70"/>
-      <use xlink:href="#Futura-Medium-72" x="59.960938"/>
-      <use xlink:href="#Futura-Medium-6f" x="96.488281"/>
-      <use xlink:href="#Futura-Medium-70" x="156.595703"/>
-      <use xlink:href="#Futura-Medium-6f" x="216.556641"/>
-      <use xlink:href="#Futura-Medium-72" x="276.664062"/>
-      <use xlink:href="#Futura-Medium-74" x="317.691406"/>
-      <use xlink:href="#Futura-Medium-69" x="345.035156"/>
-      <use xlink:href="#Futura-Medium-6f" x="369.9375"/>
-      <use xlink:href="#Futura-Medium-6e" x="430.044922"/>
-      <use xlink:href="#Futura-Medium-20" x="484.878906"/>
-      <use xlink:href="#Futura-Medium-6f" x="515.738281"/>
-      <use xlink:href="#Futura-Medium-66" x="575.845703"/>
-      <use xlink:href="#Futura-Medium-20" x="605.533203"/>
-      <use xlink:href="#Futura-Medium-70" x="636.392578"/>
-      <use xlink:href="#Futura-Medium-61" x="696.353516"/>
-      <use xlink:href="#Futura-Medium-74" x="756.314453"/>
-      <use xlink:href="#Futura-Medium-68" x="785.658203"/>
-      <use xlink:href="#Futura-Medium-73" x="840.492188"/>
-     </g>
-    </g>
-   </g>
-   <g id="patch_3">
-    <path d="M 210.162971 512.64 
-L 238.001109 512.64 
-L 238.001109 457.703135 
-L 210.162971 457.703135 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_4">
-    <path d="M 287.491131 512.64 
-L 315.329268 512.64 
-L 315.329268 449.233377 
-L 287.491131 449.233377 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_5">
-    <path d="M 364.81929 512.64 
-L 392.657428 512.64 
-L 392.657428 460.889007 
-L 364.81929 460.889007 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_6">
-    <path d="M 442.14745 512.64 
-L 469.985588 512.64 
-L 469.985588 467.960088 
-L 442.14745 467.960088 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_7">
-    <path d="M 519.47561 512.64 
-L 547.313747 512.64 
-L 547.313747 474.564945 
-L 519.47561 474.564945 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_8">
-    <path d="M 596.803769 512.64 
-L 624.641907 512.64 
-L 624.641907 482.102252 
-L 596.803769 482.102252 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_9">
-    <path d="M 674.131929 512.64 
-L 701.970067 512.64 
-L 701.970067 487.696954 
-L 674.131929 487.696954 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_10">
-    <path d="M 751.460089 512.64 
-L 779.298226 512.64 
-L 779.298226 487.230728 
-L 751.460089 487.230728 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_11">
-    <path d="M 828.788248 512.64 
-L 856.626386 512.64 
-L 856.626386 491.737572 
-L 828.788248 491.737572 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_12">
-    <path d="M 906.116408 512.64 
-L 933.954545 512.64 
-L 933.954545 90.24 
-L 906.116408 90.24 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #d3d3d3"/>
-   </g>
-   <g id="patch_13">
-    <path d="M 173.045455 512.64 
-L 200.883592 512.64 
-L 200.883592 414.487334 
-L 173.045455 414.487334 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_14">
-    <path d="M 250.373614 512.64 
-L 278.211752 512.64 
-L 278.211752 275.437723 
-L 250.373614 275.437723 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_15">
-    <path d="M 327.701774 512.64 
-L 355.539911 512.64 
-L 355.539911 279.527417 
-L 327.701774 279.527417 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_16">
-    <path d="M 405.029933 512.64 
-L 432.868071 512.64 
-L 432.868071 377.680084 
-L 405.029933 377.680084 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_17">
-    <path d="M 482.358093 512.64 
-L 510.196231 512.64 
-L 510.196231 439.0255 
-L 482.358093 439.0255 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_18">
-    <path d="M 559.686253 512.64 
-L 587.52439 512.64 
-L 587.52439 512.64 
-L 559.686253 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_19">
-    <path d="M 637.014412 512.64 
-L 664.85255 512.64 
-L 664.85255 512.64 
-L 637.014412 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_20">
-    <path d="M 714.342572 512.64 
-L 742.18071 512.64 
-L 742.18071 512.64 
-L 714.342572 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_21">
-    <path d="M 791.670732 512.64 
-L 819.508869 512.64 
-L 819.508869 512.64 
-L 791.670732 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_22">
-    <path d="M 868.998891 512.64 
-L 896.837029 512.64 
-L 896.837029 512.64 
-L 868.998891 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #f2ad48"/>
-   </g>
-   <g id="patch_23">
-    <path d="M 135 512.64 
-L 135 69.12 
-" style="fill: none; stroke: #ffffff; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_24">
-    <path d="M 972 512.64 
-L 972 69.12 
-" style="fill: none; stroke: #ffffff; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_25">
-    <path d="M 135 512.64 
-L 972 512.64 
-" style="fill: none; stroke: #ffffff; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_26">
-    <path d="M 135 69.12 
-L 972 69.12 
-" style="fill: none; stroke: #ffffff; stroke-linejoin: miter; stroke-linecap: square"/>
-   </g>
-   <g id="patch_27">
-    <path d="M 191.604213 512.64 
-L 219.44235 512.64 
-L 219.44235 414.487334 
-L 191.604213 414.487334 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_28">
-    <path d="M 268.932373 512.64 
-L 296.77051 512.64 
-L 296.77051 365.411 
-L 268.932373 365.411 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_29">
-    <path d="M 346.260532 512.64 
-L 374.09867 512.64 
-L 374.09867 353.141917 
-L 346.260532 353.141917 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_30">
-    <path d="M 423.588692 512.64 
-L 451.426829 512.64 
-L 451.426829 377.680084 
-L 423.588692 377.680084 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_31">
-    <path d="M 500.916851 512.64 
-L 528.754989 512.64 
-L 528.754989 389.949167 
-L 500.916851 389.949167 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_32">
-    <path d="M 578.245011 512.64 
-L 606.083149 512.64 
-L 606.083149 443.115195 
-L 578.245011 443.115195 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_33">
-    <path d="M 655.573171 512.64 
-L 683.411308 512.64 
-L 683.411308 488.101833 
-L 655.573171 488.101833 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_34">
-    <path d="M 732.90133 512.64 
-L 760.739468 512.64 
-L 760.739468 504.460611 
-L 732.90133 504.460611 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_35">
-    <path d="M 810.22949 512.64 
-L 838.067627 512.64 
-L 838.067627 512.64 
-L 810.22949 512.64 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="patch_36">
-    <path d="M 887.55765 512.64 
-L 915.395787 512.64 
-L 915.395787 500.370917 
-L 887.55765 500.370917 
-z
-" clip-path="url(#p5dce1de818)" style="fill: #99a3fd"/>
-   </g>
-   <g id="legend_1">
-    <g id="patch_37">
-     <path d="M 146.2 157.925 
-L 292.1325 157.925 
-Q 295.3325 157.925 295.3325 154.725 
-L 295.3325 80.32 
-Q 295.3325 77.12 292.1325 77.12 
-L 146.2 77.12 
-Q 143 77.12 143 80.32 
-L 143 154.725 
-Q 143 157.925 146.2 157.925 
-z
-" style="fill: #e5e5e5; opacity: 0.8; stroke: #cccccc; stroke-width: 0.5; stroke-linejoin: miter"/>
-    </g>
-    <g id="patch_38">
-     <path d="M 149.4 96.715 
-L 181.4 96.715 
-L 181.4 85.515 
-L 149.4 85.515 
-z
-" style="fill: #f2ad48"/>
-    </g>
-    <g id="text_19">
-     <!-- shortest path -->
-     <g style="fill: #444444" transform="translate(194.2 96.715)scale(0.16 -0.16)">
-      <use xlink:href="#Futura-Medium-73"/>
-      <use xlink:href="#Futura-Medium-68" x="40.576172"/>
-      <use xlink:href="#Futura-Medium-6f" x="95.410156"/>
-      <use xlink:href="#Futura-Medium-72" x="155.517578"/>
-      <use xlink:href="#Futura-Medium-74" x="196.544922"/>
-      <use xlink:href="#Futura-Medium-65" x="224.763672"/>
-      <use xlink:href="#Futura-Medium-73" x="280.085938"/>
-      <use xlink:href="#Futura-Medium-74" x="320.662109"/>
-      <use xlink:href="#Futura-Medium-20" x="348.005859"/>
-      <use xlink:href="#Futura-Medium-70" x="378.865234"/>
-      <use xlink:href="#Futura-Medium-61" x="438.826172"/>
-      <use xlink:href="#Futura-Medium-74" x="498.787109"/>
-      <use xlink:href="#Futura-Medium-68" x="528.130859"/>
-     </g>
-    </g>
-    <g id="patch_39">
-     <path d="M 149.4 122.05 
-L 181.4 122.05 
-L 181.4 110.85 
-L 149.4 110.85 
-z
-" style="fill: #99a3fd"/>
-    </g>
-    <g id="text_20">
-     <!-- ILQL -->
-     <g style="fill: #444444" transform="translate(194.2 122.05)scale(0.16 -0.16)">
-      <defs>
-       <path id="Futura-Medium-49" d="M 1306 4825 
-L 1306 0 
-L 578 0 
-L 578 4825 
-L 1306 4825 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-4c" d="M 1306 4825 
-L 1306 684 
-L 2725 684 
-L 2725 0 
-L 578 0 
-L 578 4825 
-L 1306 4825 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-51" d="M 5488 -88 
-L 4572 -88 
-L 4194 300 
-Q 3591 -88 2850 -88 
-Q 1891 -88 1147 563 
-Q 338 1278 338 2391 
-Q 338 3481 1103 4209 
-Q 1847 4916 2859 4916 
-Q 3778 4916 4506 4297 
-Q 5381 3553 5381 2356 
-Q 5381 1419 4691 691 
-L 5488 -88 
-z
-M 3484 1909 
-L 4184 1213 
-Q 4647 1694 4647 2403 
-Q 4647 3181 4131 3706 
-Q 3616 4231 2850 4231 
-Q 2075 4231 1575 3706 
-Q 1072 3184 1072 2384 
-Q 1072 1603 1591 1106 
-Q 2131 594 2825 594 
-Q 3297 594 3678 809 
-L 2544 1909 
-L 3484 1909 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#Futura-Medium-49"/>
-      <use xlink:href="#Futura-Medium-4c" x="29.492188"/>
-      <use xlink:href="#Futura-Medium-51" x="73.828125"/>
-      <use xlink:href="#Futura-Medium-4c" x="163.183594"/>
-     </g>
-    </g>
-    <g id="patch_40">
-     <path d="M 149.4 147.385 
-L 181.4 147.385 
-L 181.4 136.185 
-L 149.4 136.185 
-z
-" style="fill: #d3d3d3"/>
-    </g>
-    <g id="text_21">
-     <!-- random walk -->
-     <g style="fill: #444444" transform="translate(194.2 147.385)scale(0.16 -0.16)">
-      <defs>
-       <path id="Futura-Medium-64" d="M 2688 5278 
-L 3394 5278 
-L 3394 0 
-L 2688 0 
-L 2688 319 
-Q 2272 -88 1747 -88 
-Q 1122 -88 709 369 
-Q 300 834 300 1531 
-Q 300 2213 709 2669 
-Q 1116 3128 1731 3128 
-Q 2266 3128 2688 2691 
-L 2688 5278 
-z
-M 1019 1531 
-Q 1019 1094 1253 819 
-Q 1494 541 1859 541 
-Q 2250 541 2491 809 
-Q 2731 1088 2731 1516 
-Q 2731 1944 2491 2222 
-Q 2250 2494 1866 2494 
-Q 1503 2494 1259 2219 
-Q 1019 1941 1019 1531 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-6d" d="M 444 3044 
-L 1147 3044 
-L 1147 2763 
-Q 1350 2975 1494 3050 
-Q 1647 3128 1878 3128 
-Q 2394 3128 2694 2678 
-Q 3025 3128 3591 3128 
-Q 4619 3128 4619 1881 
-L 4619 0 
-L 3913 0 
-L 3913 1691 
-Q 3913 2128 3806 2309 
-Q 3697 2494 3447 2494 
-Q 3156 2494 3023 2275 
-Q 2891 2056 2891 1572 
-L 2891 0 
-L 2184 0 
-L 2184 1681 
-Q 2184 2494 1716 2494 
-Q 1419 2494 1283 2272 
-Q 1147 2050 1147 1572 
-L 1147 0 
-L 444 0 
-L 444 3044 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-77" d="M 825 3044 
-L 1622 1306 
-L 2481 3322 
-L 3347 1306 
-L 4134 3044 
-L 4922 3044 
-L 3328 -228 
-L 2481 1731 
-L 1625 -228 
-L 34 3044 
-L 825 3044 
-z
-" transform="scale(0.015625)"/>
-       <path id="Futura-Medium-6b" d="M 1147 5278 
-L 1147 2059 
-L 2138 3044 
-L 3081 3044 
-L 1759 1766 
-L 3178 0 
-L 2266 0 
-L 1259 1284 
-L 1147 1172 
-L 1147 0 
-L 444 0 
-L 444 5278 
-L 1147 5278 
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#Futura-Medium-72"/>
-      <use xlink:href="#Futura-Medium-61" x="36.777344"/>
-      <use xlink:href="#Futura-Medium-6e" x="96.738281"/>
-      <use xlink:href="#Futura-Medium-64" x="151.572266"/>
-      <use xlink:href="#Futura-Medium-6f" x="211.533203"/>
-      <use xlink:href="#Futura-Medium-6d" x="271.640625"/>
-      <use xlink:href="#Futura-Medium-20" x="350.742188"/>
-      <use xlink:href="#Futura-Medium-77" x="381.601562"/>
-      <use xlink:href="#Futura-Medium-61" x="457.369141"/>
-      <use xlink:href="#Futura-Medium-6c" x="517.330078"/>
-      <use xlink:href="#Futura-Medium-6b" x="542.232422"/>
-     </g>
-    </g>
-   </g>
-  </g>
- </g>
- <defs>
-  <clipPath id="p5dce1de818">
-   <rect x="135" y="69.12" width="837" height="443.52"/>
-  </clipPath>
- </defs>
+  <defs
+     id="defs513">
+    <clipPath
+       id="pa228791ba9">
+      <rect
+         x="135"
+         y="69.120003"
+         width="837"
+         height="443.51999"
+         id="rect510" />
+    </clipPath>
+  </defs>
 </svg>

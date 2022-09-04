@@ -3,6 +3,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ilql import main
 from torch import tensor
+import torch as th
 import networkx as nx
 import numpy as np
 
@@ -11,18 +12,18 @@ sampled_lengths = []
 iql_lengths = []
 
 for seed in range(10):
-    model, data = main(seed=seed)
+    model, data = main(seed=seed, debug=True)
     model.eval()
 
-    g = nx.from_numpy_array(data.adj)
+    g = nx.from_numpy_array(data.adj, create_using=nx.DiGraph)
 
     # optimal
     for start in set(range(data.n_nodes)) - {data.goal}:
-        shortest_path = nx.shortest_path(g, start, data.goal)[:data.walk_size]
-        if shortest_path[-1] != data.goal:
-            optimal_lengths.append(data.walk_size)
-        else:
+        try:
+            shortest_path = nx.shortest_path(g, start, data.goal)[:data.walk_size]
             optimal_lengths.append(len(shortest_path)-1)
+        except:
+            optimal_lengths.append(data.walk_size)
 
     # ilql
     starts = th.arange(1, data.n_nodes).unsqueeze(1).to(model.device)
@@ -45,8 +46,8 @@ for seed in range(10):
                 break
 
         sampled_lengths.append(length)
-
 # ■ ~
+
 from matplotlib import pyplot
 import matplotlib
 
@@ -55,6 +56,9 @@ matplotlib.rcParams['text.color'] = fontcolor
 matplotlib.rcParams['axes.labelcolor'] = fontcolor
 matplotlib.rcParams['xtick.color'] = fontcolor
 matplotlib.rcParams['ytick.color'] = fontcolor
+matplotlib.rcParams['xtick.labelcolor'] = fontcolor
+matplotlib.rcParams['ytick.labelcolor'] = fontcolor
+matplotlib.rcParams['xtick.labelcolor'] = fontcolor
 
 matplotlib.rcParams["font.family"] = "Futura"
 matplotlib.rcParams["font.size"] = 15
@@ -87,7 +91,7 @@ pyplot.bar(np.arange(1, data.walk_size+1)+barsize/1.5, sampled_hist, width=barsi
 pyplot.legend(fontsize=16)
 pyplot.xticks(np.arange(1, data.walk_size+1), list(np.arange(1, data.walk_size)) + ['∞'])
 
-pyplot.xlabel('# of steps to goal', fontsize=22)
-pyplot.ylabel('proportion of paths', fontsize=22)
+pyplot.xlabel('# of steps to goal', fontsize=22, color=fontcolor, labelpad=20)
+pyplot.ylabel('proportion of paths', fontsize=22, color=fontcolor, labelpad=20)
 
-pyplot.savefig('graph_plot.svg')
+pyplot.savefig('scripts/graph_plot.svg')
