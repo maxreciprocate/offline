@@ -1,14 +1,13 @@
 import numpy as np
 import torch as th
 from torch import tensor
-import networkx as nx
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import TensorDataset
 import torch.nn.functional as F
-from utils import logvars, randexclude
-import wandb
+from utils import randexclude
+import networkx as nx
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
-class RandomWalks(Dataset):
+class RandomWalks(TensorDataset):
     def __init__(self, n_nodes=20, walk_size=10, n_walks=1000, p_edge=0.1, seed=1002):
         self.n_nodes = n_nodes
         self.n_walks = n_walks
@@ -52,10 +51,6 @@ class RandomWalks(Dataset):
             attention_masks.append(attention_mask)
             states.append(F.pad(walk, (0, walk_size-len(walk))))
 
-        self.rewards = th.stack(rewards)
-        self.attention_masks = th.stack(attention_masks)
-        self.states = th.stack(states)
-
         self.worstlen = self.walk_size
         self.avglen = sum(map(len, walks)) / self.n_walks
         self.bestlen = 0
@@ -65,13 +60,8 @@ class RandomWalks(Dataset):
             self.bestlen += len(shortest_path)
         self.bestlen /= self.n_nodes - 1
 
-        print(f'{self.n_walks} walks of which {(np.array([r[0] for r in self.rewards])==-1).mean()*100:.0f}% arrived at destination')
-
-    def __len__(self):
-        return self.n_walks
-
-    def __getitem__(self, ind):
-        return self.states[ind], self.attention_masks[ind], self.rewards[ind]
+        print(f'{self.n_walks} walks of which {(np.array([r[0] for r in rewards])==-1).mean()*100:.0f}% arrived at destination')
+        super().__init__(th.stack(states), th.stack(attention_masks), th.stack(rewards))
 
     def render(self):
         from matplotlib import pyplot
@@ -85,7 +75,6 @@ class RandomWalks(Dataset):
         nx.draw_networkx_nodes(g, nodelist=[self.goal], pos=pos, node_size=300, node_color='darkblue')
         pyplot.show()
 
-    @th.inference_mode()
     def eval(self, logs, model, betas=[1]):
         beta = betas[-1]
         starts = th.arange(1, self.n_nodes).unsqueeze(1).to(model.device)

@@ -6,7 +6,7 @@ import torch as th
 from torch import tensor, nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from transformers import GPT2Config, GPT2PreTrainedModel, GPT2Model, AutoTokenizer
+from transformers import GPT2Config, AutoTokenizer
 from accelerate import Accelerator
 
 import wandb
@@ -18,13 +18,7 @@ from copy import deepcopy
 th.set_printoptions(sci_mode=False)
 th.manual_seed(1000)
 
-def main():
-    if run_from_ipython:
-        args = {}
-    else:
-        # poor man's argparse
-        args = {a[2:]: eval(v) for a, v in map(lambda s: s.split('='), sys.argv[1:])}
-
+def main(**args):
     task = args['task'] if 'task' in args else 'RandomWalks'
     config = yaml.safe_load(open('config.yaml'))[task]
     config.update(args)
@@ -158,12 +152,22 @@ def main():
 
                 logs['epoch_time'] = time() - start_time
                 accelerator.log(logs)
+
+                accelerator.save_state(f'state-{task.lower()}')
                 start_time = time()
 
     if accelerator.is_local_main_process:
         accelerator.wait_for_everyone()
         model.eval()
-        accelerator.log({'target': data.eval({}, model, betas=[1])[0]})
+        target = data.eval({}, model, betas=[1])[0]
+        accelerator.log({'target': target})
+        return model, data
 
 if __name__ == '__main__':
-    main()
+    if run_from_ipython:
+        args = {}
+    else:
+        # poor man's argparse
+        args = {a[2:]: eval(v) for a, v in map(lambda s: s.split('='), sys.argv[1:])}
+
+    main(**args)
