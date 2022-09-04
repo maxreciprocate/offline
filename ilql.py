@@ -52,7 +52,7 @@ def main():
 
         tokenizer = AutoTokenizer.from_pretrained(config['model'])
         with accelerator.main_process_first():
-            data = Sentiments(tokenizer)
+            data = Sentiments(tokenizer, batch_size=config['batch_size'], need_pipe=accelerator.is_main_process)
 
         model = QVModel(config['model'], two_qs=config['two_qs']).to(device)
         gpt_blocks = list(model.gpt.transformer.h)[:-config['n_layers_unfrozen']]
@@ -76,20 +76,17 @@ def main():
     opt = th.optim.AdamW([p for p in model.parameters() if p.requires_grad], config['lr'], config['opt_betas'])
     steps = config['n_epochs'] * (len(data) // config['batch_size'])
     scheduler = th.optim.lr_scheduler.CosineAnnealingLR(opt, steps)
-
     n_opt_steps = 0
 
-    model.train()
     model, opt, dataloader, scheduler = accelerator.prepare(model, opt, dataloader, scheduler)
-    print(model(**model.dummy_inputs).logits.device)
-
-    tbar = trange(config['n_epochs'], disable=not accelerator.is_local_main_process)
+    print(model(**model.dummy_inputs)[0].device)
 
     if accelerator.is_local_main_process:
-        model.eval()
-        data.eval({}, model, betas=[0, 1])
+        data.eval({}, model, betas=[0])
         model.train()
 
+    tbar = trange(config['n_epochs'], disable=not accelerator.is_local_main_process)
+    model.train()
     start_time = time()
 
     for iepoch in tbar:

@@ -28,8 +28,11 @@ def make_head(n_embd: int, out: int):
 class QVModel(nn.Module):
     def __init__(self, config: Union[PretrainedConfig, str], two_qs=True):
         super().__init__()
+
         if isinstance(config, PretrainedConfig):
             self.gpt = AutoModelForCausalLM.from_config(config)
+        elif config == 'EleutherAI/gpt-j-6B':
+            self.gpt = AutoModelForCausalLM.from_pretrained(config, revision='float16', torch_dtype=th.float16)
         else:
             self.gpt = AutoModelForCausalLM.from_pretrained(config)
 
