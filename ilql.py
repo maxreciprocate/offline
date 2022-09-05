@@ -25,7 +25,7 @@ def main(**args):
 
     accelerator = Accelerator(log_with='wandb')
     if accelerator.is_main_process:
-        accelerator.init_trackers(project_name='test-ilql', init_kwargs={'name': f'ilql-{task}'}, config=config)
+        accelerator.init_trackers(project_name='test-ilql', init_kwargs={'wandb': {'name': f'ilql-{task}', 'mode': 'disabled' if args.get('debug', False) else 'online'}}, config=config)
         config = wandb.config
 
     device = accelerator.device
@@ -37,7 +37,6 @@ def main(**args):
     if task == 'RandomWalks':
         from randomwalks import RandomWalks
         data = RandomWalks(seed=config['seed'])
-
         gptconfig = GPT2Config(**config['gptconfig'], vocab_size=data.n_nodes)
         model = QVModel(gptconfig, two_qs=config['two_qs']).to(device)
 
@@ -49,22 +48,28 @@ def main(**args):
             data = Sentiments(tokenizer, batch_size=config['batch_size'], need_pipe=accelerator.is_main_process)
 
         model = QVModel(config['model'], two_qs=config['two_qs']).to(device)
-        gpt_blocks = list(model.gpt.transformer.h)[:-config['n_layers_unfrozen']]
-        for m in gpt_blocks:
-            for p in m.parameters():
-                p.requires_grad = False
 
     elif task == 'Carps':
         from carps import Carps
         data = Carps(max_length=config['max_length'], diff_reward=config['diff_reward'])
+        model = QVModel(config['model'], two_qs=config['two_qs']).to(device)
 
-        model = QVModel.from_pretrained(config['model'], two_qs=config['two_qs']).to(device)
-        gpt_blocks = list(model.transformer.h)[:-config['n_layers_unfrozen']]
-        for m in gpt_blocks:
-            for p in m.parameters():
-                p.requires_grad = False
+    elif task == 'Captions':
+        from captions import AestheticCaptions
+
+        tokenizer = AutoTokenizer.from_pretrained('gpt2')
+        tokenizer.pad_token = tokenizer.eos_token_id
+        with accelerator.main_process_first():
+            data = AestheticCaptions(tokenizer, batch_size=config['batch_size'], n_samples=16)
+
+        model = QVModel(config['model'], two_qs=config['two_qs']).to(device)
     else:
         raise ValueError(f'nonexistent {task=}')
+
+    gpt_blocks = list(model.gpt.transformer.h)[:-config['n_layers_unfrozen']]
+    for m in gpt_blocks:
+        for p in m.parameters():
+            p.requires_grad = False
 
     dataloader = DataLoader(data, batch_size=config['batch_size'], shuffle=True)
     opt = th.optim.AdamW([p for p in model.parameters() if p.requires_grad], config['lr'], config['opt_betas'])

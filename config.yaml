@@ -2,35 +2,39 @@ RandomWalks:
   lr: 0.001
   opt_betas: [0.9, 0.95]
   batch_size: 500
-  tau: 0.5
+  tau: 0.7
   gamma: 0.99
   cql_scale: 0.1
+  awac_scale: 1
   alpha: 0.1
   steps_for_target_q_sync: 10
   steps_for_eval: 5
   inference_betas: [1]
   n_epochs: 100
   seed: 1000
+  n_layers_unfrozen: 0
   two_qs: true
   gptconfig:
-    n_embd: 72
-    n_layer: 2
+    n_embd: 144
+    n_layer: 6
     n_head: 1
 
 Sentiments:
   lr: 0.0006
   opt_betas: [0.9, 0.95]
-  batch_size: 4
+  batch_size: 32
   tau: 0.7
   gamma: 0.99
   cql_scale: 0.1
-  alpha: 0.1
-  steps_for_target_q_sync: 10
-  steps_for_eval: 30
-  inference_betas: [0, 1, 4]
-  model: gpt2
+  awac_scale: 1
+  alpha: 1
+  steps_for_target_q_sync: 50
+  steps_for_eval: 100
+  inference_betas: [1]
+  model: gpt2-xl
+  n_layers_unfrozen: 0
   two_qs: true
-  n_epochs: 10
+  n_epochs: 1
 
 Carps:
   lr: 0.00004
@@ -46,3 +50,20 @@ Carps:
   n_layers_unfrozen: 2
   max_length: 48
   diff_reward: true
+
+Captions:
+  lr: 0.0006
+  opt_betas: [0.9, 0.95]
+  batch_size: 16
+  tau: 0.7
+  gamma: 0.99
+  cql_scale: 0.1
+  awac_scale: 1
+  alpha: 1
+  steps_for_target_q_sync: 50
+  steps_for_eval: 100
+  inference_betas: [0, 1]
+  model: gpt2-large
+  n_layers_unfrozen: 0
+  two_qs: true
+  n_epochs: 1

@@ -77,10 +77,12 @@ class QVModel(nn.Module):
                 target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
 
     @th.inference_mode()
-    def sample(self, query, n_samples=128, beta=1, max_length=32, temperature=1, top_k=20, logit_mask=None, logs=True):
+    def sample(self, query, beta=1, max_length=32, temperature=1, top_k=20, logit_mask=None, logs=True, eos_token_id=50256):
         input = query.clone()
         past_key_values = None
         tensors = defaultdict(list)
+
+        finished = th.zeros(input.shape[0], 1, dtype=th.long, device=query.device)
 
         for _ in range(max_length-1):
             out = self.forward(input_ids=input, past_key_values=past_key_values)
@@ -103,10 +105,13 @@ class QVModel(nn.Module):
             ps = F.softmax(modpi / temperature, -1)
 
             tokens = th.multinomial(ps, 1)
+            tokens = (1 - finished) * tokens + finished * eos_token_id
+
             query = th.hstack((query, tokens))
 
             input = tokens
             past_key_values = out.past_key_values
+            finished = (tokens == eos_token_id).long()
 
             if logs:
                 tensors['qs'].append(qs)
