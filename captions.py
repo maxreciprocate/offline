@@ -23,19 +23,27 @@ def load_tensors(cache_path, tokenizer, use_cache=True):
                   "JOIN generations ON images.gid=generations.id "
                   "WHERE rating IS NOT NULL;")
 
-        prompts, ratings = tuple(map(list, zip(*c.fetchall())))
+        prompts, ratings = tuple(map(list, zip(*filter(lambda x: len(x[0]) > 10, c.fetchall()))))
+
         out = tokenizer(prompts, padding=True, return_tensors='pt')
+        input_ids, attention_mask = out['input_ids'], out['attention_mask']
 
         # append eos
-        input_ids = F.pad(out['input_ids'], (0, 1), value=tokenizer.eos_token_id)
-        attention_mask = F.pad(out['attention_mask'], (0, 1), value=0)
+        input_ids = F.pad(input_ids, (0, 1), value=tokenizer.eos_token_id)
+        attention_mask = F.pad(attention_mask, (0, 1), value=0)
 
-        # figure out sentences' ending indices
+        # figure out sentences' endings
         diff_padding = th.zeros(input_ids.shape[0], 1, dtype=th.long)
         endings = input_ids.eq(tokenizer.eos_token_id).diff(prepend=diff_padding, dim=-1).nonzero(as_tuple=True)
 
-        rewards = th.zeros(input_ids.shape)
-        rewards[endings] = tensor(ratings, dtype=th.float32)
+        ratings = tensor(ratings, dtype=th.float32).view(-1, 1)
+        ratings = (ratings - ratings.mean()) / (ratings.std() + 1e-100)
+        rewards = ratings.repeat(1, input_ids.shape[1])
+
+        # zero padding
+        rewards[input_ids.eq(tokenizer.pad_token_id).nonzero(as_tuple=True)] = 0
+        # refill rewards for the actual eos in case pad == eos
+        rewards[endings] = ratings.view(-1)
 
         # prepend bos
         input_ids = F.pad(input_ids, (1, 0), value=tokenizer.eos_token_id)
