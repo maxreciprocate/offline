@@ -2,16 +2,19 @@ import torch as th
 import numpy as np
 from torch import tensor, nn
 import torch.nn.functional as F
-from transformers import AutoModelForCausalLM, PretrainedConfig
+from transformers import AutoModelForCausalLM, PretrainedConfig, AutoConfig
 from typing import NamedTuple, Tuple, Union
 from copy import deepcopy
 from collections import defaultdict
+from accelerate.utils import compute_module_sizes
+
+import accelerate
 
 def topk_mask(xs: th.FloatTensor, k: int):
     mintop = th.topk(xs, k)[0][:, -1].unsqueeze(-1)
     return th.where(xs < mintop, -np.inf * th.ones_like(xs, dtype=xs.dtype), xs)
 
-class QVOutput(NamedTuple):
+class QVOutput(Tuple):
     logits: th.FloatTensor
     qs: th.FloatTensor
     target_qs: th.FloatTensor
@@ -25,6 +28,22 @@ def make_head(n_embd: int, out: int):
         nn.Linear(n_embd * 4, out)
     )
 
+class QTargetHeads(nn.Module):
+    def __init__(self, n_embd, vocab_size, two_qs=True):
+        super().__init__()
+        self.two_qs = two_qs
+
+        self.target_q1_head = make_head(n_embd, vocab_size)
+
+        if two_qs:
+            self.target_q2_head = make_head(n_embd, vocab_size)
+
+    def forward(self, hs):
+        if self.two_qs:
+            return (self.target_q1_head(hs), self.target_q2_head(hs))
+
+        return (self.target_q1_head(hs),)
+
 class QVModel(nn.Module):
     def __init__(self, config: Union[PretrainedConfig, str], two_qs=True):
         super().__init__()
@@ -37,47 +56,39 @@ class QVModel(nn.Module):
             self.gpt = AutoModelForCausalLM.from_pretrained(config)
 
         self.two_qs = two_qs
-        vocab_size = self.gpt.config.vocab_size
-        n_embd = self.gpt.config.n_embd
+        self.vocab_size = self.gpt.config.vocab_size
+        self.n_embd = self.gpt.config.n_embd
 
-        self.q1_head = make_head(n_embd, vocab_size)
-        self.target_q1_head = deepcopy(self.q1_head)
-
-        for params in self.target_q1_head.parameters():
-            params.requires_grad = False
+        self.q1_head = make_head(self.n_embd, self.vocab_size)
 
         if two_qs:
-            self.q2_head = make_head(n_embd, vocab_size)
-            self.target_q2_head = deepcopy(self.q2_head)
+            self.q2_head = make_head(self.n_embd, self.vocab_size)
 
-            for params in self.target_q2_head.parameters():
-                params.requires_grad = False
-
-        self.v_head = make_head(n_embd, 1)
+        self.v_head = make_head(self.n_embd, 1)
 
     def forward(self, **x):
         out = self.gpt.transformer(**x)
         hs = out.last_hidden_state
+        logits = self.gpt.lm_head(hs)
+        vs = self.v_head(hs)
 
         if self.two_qs:
             qs = (self.q1_head(hs), self.q2_head(hs))
-            target_qs = (self.target_q1_head(hs), self.target_q2_head(hs))
         else:
             qs = self.q1_head(hs)
-            target_qs = self.target_q1_head(hs)
 
-        return QVOutput(self.gpt.lm_head(hs), qs, target_qs, self.v_head(hs), out.past_key_values)
+        return QVOutput((logits, qs, vs, hs, out.past_key_values))
 
-    def sync_target_q(self, alpha):
-        for target_param, copy_param in zip(self.target_q1_head.parameters(), self.q1_head.parameters()):
+    def sync_target_q_heads(self, target_q_heads, alpha):
+        for target_param, copy_param in zip(target_q_heads.target_q1_head.parameters(), self.q1_head.parameters()):
             target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
 
         if self.two_qs:
-            for target_param, copy_param in zip(self.target_q2_head.parameters(), self.q2_head.parameters()):
+            for target_param, copy_param in zip(target_q_heads.target_q2_head.parameters(), self.q2_head.parameters()):
                 target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
 
     @th.inference_mode()
-    def sample(self, query, beta=1, max_length=32, temperature=1, top_k=20, logit_mask=None, logs=True, eos_token_id=50256):
+    def sample(self, target_q_heads, query, beta=1, max_length=32, temperature=1, top_k=20, logit_mask=None, logs=True, eos_token_id=50256):
         input = query.clone()
         past_key_values = None
         tensors = defaultdict(list)
@@ -85,21 +96,20 @@ class QVModel(nn.Module):
         finished = th.zeros(input.shape[0], 1, dtype=th.long, device=query.device)
 
         for _ in range(max_length-1):
-            out = self.forward(input_ids=input, past_key_values=past_key_values)
+            logits, _, vs, hs, past_key_values = self.forward(input_ids=input, past_key_values=past_key_values)
+            target_qs = target_q_heads(hs)
 
             if self.two_qs:
-                qs = th.minimum(out.target_qs[0][:, -1], out.target_qs[1][:, -1])
+                qs = th.minimum(target_qs[0][:, -1], target_qs[1][:, -1])
             else:
-                qs = out.target_qs[:, -1]
+                qs = target_qs[:, -1]
 
-            logits = out.logits[:, -1]
+            logits = logits[:, -1]
 
             if logit_mask is not None:
                 logits[th.where(logit_mask[input[:, -1]])] = -np.inf
 
-            vs = out.vs[:, -1]
-
-            adv = qs - vs
+            adv = qs - vs[:, -1, :]
             pi = F.log_softmax(logits, -1)
             modpi = topk_mask(pi + beta * adv, top_k)
             ps = F.softmax(modpi / temperature, -1)
@@ -110,7 +120,6 @@ class QVModel(nn.Module):
             query = th.hstack((query, tokens))
 
             input = tokens
-            past_key_values = out.past_key_values
             finished = (tokens == eos_token_id).long()
 
             if logs:

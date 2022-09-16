@@ -8,10 +8,11 @@ import networkx as nx
 
 # Toy dataset from Decision Transformer (Chen et. al 2021)
 class RandomWalks(TensorDataset):
-    def __init__(self, n_nodes=20, walk_size=10, n_walks=1000, p_edge=0.1, seed=1002):
+    def __init__(self, n_epochs=1, n_nodes=20, walk_size=10, n_walks=1000, p_edge=0.1, seed=1002):
         self.n_nodes = n_nodes
         self.n_walks = n_walks
         self.walk_size = walk_size
+        self.n_tokens = n_epochs * n_walks
         rng = np.random.RandomState(seed)
 
         walks, rewards = [], []
@@ -65,7 +66,10 @@ class RandomWalks(TensorDataset):
         self.bestlen /= self.n_nodes - 1
 
         print(f'{self.n_walks} walks of which {(np.array([r[0] for r in rewards])==-1).mean()*100:.0f}% arrived at destination')
-        super().__init__(th.stack(states), th.stack(attention_masks), th.stack(rewards))
+        super.__init__(th.stack(states), th.stack(attention_masks), th.stack(rewards))
+
+    def __len__(self):
+        return self.n_tokens
 
     def render(self):
         from matplotlib import pyplot
@@ -79,11 +83,11 @@ class RandomWalks(TensorDataset):
         nx.draw_networkx_nodes(g, nodelist=[self.goal], pos=pos, node_size=300, node_color='darkblue')
         pyplot.show()
 
-    def eval(self, logs, model, betas=[1]):
+    def eval(self, logs, model, target_q_heads, betas=[1]):
         beta = betas[-1]
         starts = th.arange(1, self.n_nodes).unsqueeze(1).to(model.device)
 
-        paths, stats = model.sample(starts, max_length=self.walk_size, logit_mask=tensor(~self.adj), beta=beta)
+        paths, stats = model.sample(target_q_heads, starts, max_length=self.walk_size, logit_mask=tensor(~self.adj), beta=beta)
         logs.update(stats)
 
         narrived = 0
