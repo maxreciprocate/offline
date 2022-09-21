@@ -48,49 +48,36 @@ def load_tensors(cache_path, tokenizer, sentiment_pipe, max_length=128, use_cach
     print(f"{tohuman(np.prod(cache['tokens'].shape))} tokens")
     return cache
 
-class Sentiments(TensorDataset):
-    def __init__(self, tokenizer: AutoTokenizer, n_epochs=1, max_length=64, n_samples=16, batch_size=1, need_pipe=False):
+class Sentiments:
+    def __init__(self, tokenizer: AutoTokenizer, max_length=64, n_samples=32, needs_pipe=False):
         self.max_length = max_length
-        self.n_samples = n_samples
-        self.batch_size = batch_size
         self.tokenizer = tokenizer
 
         cache_path = f'cache/imdb-sentiments_{max_length=}_tokenizer={tokenizer.name_or_path}.pt'
 
-        self.sentiment_pipe = None
-
-        if not os.path.exists(cache_path):
-            pipe_device = th.device(0)
-            self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=pipe_device)
+        if needs_pipe:
+            self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=th.device(0))
+        else:
+            self.sentiment_pipe = None
 
         tensors = load_tensors(cache_path, self.tokenizer, self.sentiment_pipe, max_length=max_length)
 
-        if need_pipe:
-            self.sentiment_pipe = pipeline('sentiment-analysis', 'lvwerra/distilbert-imdb', device=th.device('cpu'))
+        query = tensor([self.tokenizer.eos_token_id] * n_samples).view(n_samples, 1)
+        self.logit_mask = None
 
-        super().__init__(tensors['tokens'], tensors['attention_masks'], tensors['rewards'])
-        self.n_tokens = n_epochs * tensors['tokens'].shape[0]
+        self.dataset = TensorDataset(tensors['tokens'], tensors['attention_masks'], tensors['rewards'])
+        self.eval_dataset = TensorDataset(query)
 
-    def __len__(self):
-        return self.n_tokens
+    def eval(self, samples, beta):
+        reviews = self.tokenizer.batch_decode(samples, skip_special_tokens=True)
 
-    def eval(self, logs, model, target_q_heads, betas=[1]):
-        query = tensor([self.tokenizer.eos_token_id] * self.n_samples, device=model.device).view(self.n_samples, 1)
+        rewards = [1-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in self.sentiment_pipe(reviews)]
+        reward = np.mean(rewards)
 
-        for beta in betas:
-            responses = batch_map(
-                lambda batch: model.sample(target_q_heads, query, beta=beta, max_length=self.max_length)[0],
-                query, bsize=self.batch_size, desc='Generating')
+        rows = list(zip(reviews, rewards))
+        print(f'\n{beta=} {reward=:.2f}\n' + '\n'.join([f'[{sent:.2f}] {text}' for text, sent in rows[:8]]))
 
-            reviews = self.tokenizer.batch_decode(responses, skip_special_tokens=True)
+        stats = { f'reward/{beta}': reward,
+                  f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32]) }
 
-            rewards = [1-s['score'] if s['label'] == 'NEGATIVE' else s['score'] for s in self.sentiment_pipe(reviews)]
-            reward = np.mean(rewards)
-
-            rows = list(zip(reviews, rewards))
-            print(f'\n{beta=} {reward=:.2f}\n' + '\n'.join([f'[{sent:.2f}] {text}' for text, sent in rows[:8]]))
-
-            logs[f'reward/{beta}'] = reward
-            logs.update({f'responses/{beta}': wandb.Table(columns=['response', 'sentiment'], rows=rows[:32])})
-
-        return reward, {}
+        return reward, stats

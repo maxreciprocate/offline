@@ -9,16 +9,17 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from transformers import GPT2Config, AutoTokenizer
 from accelerate import Accelerator
+import numpy as np
 
 import wandb
-from tqdm import tqdm
-from utils import run_from_ipython
-from models import QVModel, QTargetHeads
+from tqdm import tqdm, trange
+from utils import run_from_ipython, timeit, check_weights
+from models import QVModel
 from copy import deepcopy
 import accelerate
+import deepspeed
 
 th.set_printoptions(sci_mode=False)
-th.manual_seed(1000)
 
 def main(**args):
     task = args['task'] if 'task' in args else 'RandomWalks'
@@ -26,6 +27,8 @@ def main(**args):
     config.update(args)
 
     accelerator = Accelerator(log_with='wandb')
+    accelerator.print(os.environ)
+
     if not config.get('debug', False) and accelerator.is_main_process:
         prefix = config.get('prefix', '')
         modelname = config.get('model', '')
@@ -35,7 +38,6 @@ def main(**args):
     device = accelerator.device
 
     alpha, gamma, tau = config['alpha'], config['gamma'], config['tau']
-    steps_for_eval, steps_for_target_q_sync = config['steps_for_target_q_sync'], config['steps_for_eval']
     awac_scale, cql_scale = config['awac_scale'], config['cql_scale']
 
     if task == 'RandomWalks':
@@ -47,11 +49,12 @@ def main(**args):
     elif task == 'Sentiments':
         from sentiments import Sentiments
 
-        tokenizer = AutoTokenizer.from_pretrained(config['model'])
         with accelerator.main_process_first():
-            data = Sentiments(tokenizer, batch_size=config['batch_size'], need_pipe=accelerator.is_main_process)
+            tokenizer = AutoTokenizer.from_pretrained(config['model'])
+            data = Sentiments(tokenizer, needs_pipe=accelerator.is_main_process)
 
-        model = QVModel(config['model'], two_qs=config['two_qs'])
+        with timeit('init model'):
+            model = QVModel(config['model'], two_qs=config['two_qs'])
 
     elif task == 'Carps':
         from carps import Carps
@@ -75,109 +78,141 @@ def main(**args):
         for p in m.parameters():
             p.requires_grad = False
 
-    dataloader = DataLoader(data, batch_size=config['batch_size'], shuffle=True)
+    train_dataloader = DataLoader(data.dataset, batch_size=config['batch_size'], shuffle=True)
+
+    world_size = int(os.environ.get('WORLD_SIZE', 1))
+    eval_batch_size = int(config['batch_size'] if len(data.eval_dataset) / world_size > config['batch_size'] else np.ceil(len(data.eval_dataset) / world_size))
+
+    eval_dataloader = DataLoader(data.eval_dataset, eval_batch_size)
     opt = th.optim.AdamW([p for p in model.parameters() if p.requires_grad], config['lr'], config['opt_betas'])
-    scheduler = th.optim.lr_scheduler.CosineAnnealingLR(opt, len(data))
+
+    total_steps = int(config['n_epochs'] * np.ceil(len(data.dataset) / config['batch_size']) / world_size)
+    scheduler = th.optim.lr_scheduler.CosineAnnealingLR(opt, total_steps)
     n_opt_steps = 0
 
-    target_q_heads = QTargetHeads(model.n_embd, model.vocab_size, two_qs=config['two_qs'])
-    model, opt, dataloader, scheduler = accelerator.prepare(model, opt, dataloader, scheduler)
+    with timeit('prepare'):
+        model, opt, scheduler, train_dataloader, eval_dataloader = accelerator.prepare(
+            model, opt, scheduler, train_dataloader, eval_dataloader
+        )
 
-    print(model(**model.dummy_inputs)[0].device)
+    print(model(**accelerator.unwrap_model(model).dummy_inputs)[0].device)
 
-    target_q_heads = target_q_heads.to(device).bfloat16()
     model.train()
+    tbar = trange(total_steps, disable=not accelerator.is_local_main_process)
 
-    tbar = tqdm(dataloader, disable=not accelerator.is_main_process)
+    for iepoch in range(config['n_epochs']):
+        for batch in train_dataloader:
+            batch_time = time()
+            logs = {}
+            if n_opt_steps % config['steps_for_eval'] == 0:
+                model.eval()
+                beta = config['inference_betas'][0]
 
-    for tokens, attn, rewards in tbar:
-        batch_time = time()
-        actions = tokens[:, 1:, None]
-        isterminal = attn[:, :-1]
+                with timeit('eval'):
+                    all_samples = []
+                    for tokens in eval_dataloader:
+                        tokens = tokens[0]
+                        print(f'{tokens.shape=}')
+                        with th.no_grad():
+                            samples, stats = accelerator.unwrap_model(model).sample(
+                                tokens,
+                                beta=beta,
+                                max_length=data.max_length,
+                                logit_mask=data.logit_mask
+                            )
 
-        forward_time = time()
-        logits, qs, vs, hs, _ = model(input_ids=tokens, attention_mask=attn)
-        target_qs = target_q_heads(hs)
+                        all_samples.append(samples)
+                        logs.update(stats)
 
-        forward_time = time() - forward_time
+                samples = accelerate.utils.gather(th.vstack(all_samples))
+                print(samples)
 
-        bsize, ntokens, dsize = logits.shape
+                if accelerator.is_main_process:
+                    print(f'{samples.shape=}')
+                    reward, stats = data.eval(samples, beta)
+                    logs.update(stats)
+                    tbar.set_postfix(stats)
 
-        if config['two_qs']:
-            Q1 = qs[0][:, :-1].gather(-1, actions).squeeze(-1)
-            Q2 = qs[1][:, :-1].gather(-1, actions).squeeze(-1)
+                accelerator.wait_for_everyone()
 
-            targetQ1 = target_qs[0][:, :-1].gather(-1, actions).squeeze(-1).detach()
-            targetQ2 = target_qs[1][:, :-1].gather(-1, actions).squeeze(-1).detach()
-            targetQ = th.minimum(targetQ1, targetQ2)
-        else:
-            Q = qs[:, :-1].gather(-1, actions).squeeze(-1)
-            targetQ = target_qs[:, :-1].gather(-1, actions).squeeze(-1).detach()
+                if n_opt_steps > 0 and not config.get('debug', False):
+                    accelerator.save_state(f'stash/state-{task.lower()}')
 
-        n_nonterminal = max(1, isterminal.sum())
-        V = vs[:, 1:].squeeze() * isterminal
-        Q_ = rewards + gamma * V
+                model.train()
 
-        if config['two_qs']:
-            loss_q1 = ((Q1 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
-            loss_q2 = ((Q2 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
-            loss_q = loss_q1 + loss_q2
-        else:
-            loss_q = ((Q - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+            tokens, attn, rewards = batch
 
-        loss_v = (((targetQ >= V).int() * tau * (targetQ - V).pow(2) +
-                   (targetQ < V).int() * (1 - tau) * (targetQ - V).pow(2)) * isterminal).sum() / n_nonterminal
+            batch_time = time()
+            actions = tokens[:, 1:, None]
+            isterminal = attn[:, :-1]
 
-        if config['two_qs']:
-            loss_cql_q1 = (F.cross_entropy(qs[0][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
-            loss_cql_q2 = (F.cross_entropy(qs[1][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
-            loss_cql = loss_cql_q1 + loss_cql_q2
-        else:
-            loss_cql = (F.cross_entropy(qs[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+            forward_time = time()
+            logits, qs, target_qs, vs, _ = model(input_ids=tokens, attention_mask=attn)
 
-        loss_awac = (F.cross_entropy(logits[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+            forward_time = time() - forward_time
 
-        loss = loss_q + loss_v + cql_scale * loss_cql + awac_scale * loss_awac
+            bsize, ntokens, dsize = logits.shape
 
-        backward_time = time()
-        accelerator.backward(loss)
-        backward_time = time() - backward_time
+            if config['two_qs']:
+                Q1 = qs[0][:, :-1].gather(-1, actions).squeeze(-1)
+                Q2 = qs[1][:, :-1].gather(-1, actions).squeeze(-1)
 
-        opt.step()
-        scheduler.step()
-        opt.zero_grad()
-        n_opt_steps += 1
+                targetQ1 = target_qs[0][:, :-1].gather(-1, actions).squeeze(-1).detach()
+                targetQ2 = target_qs[1][:, :-1].gather(-1, actions).squeeze(-1).detach()
+                targetQ = th.minimum(targetQ1, targetQ2)
+            else:
+                Q = qs[:, :-1].gather(-1, actions).squeeze(-1)
+                targetQ = target_qs[:, :-1].gather(-1, actions).squeeze(-1).detach()
 
-        tbar.set_description(f'{loss_q=:.1f} {loss_v=:.2f} {loss_cql=:.1f} {loss_awac=:.1f} {backward_time=:.1f}')
+            n_nonterminal = max(1, isterminal.sum())
+            V = vs[:, 1:].squeeze() * isterminal
+            Q_ = rewards + gamma * V
 
-        if (n_opt_steps + 1) % steps_for_target_q_sync == 0:
-            if accelerator.is_main_process:
-                model.sync_target_q_heads(target_q_heads, alpha)
+            if config['two_qs']:
+                loss_q1 = ((Q1 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+                loss_q2 = ((Q2 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+                loss_q = loss_q1 + loss_q2
+            else:
+                loss_q = ((Q - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
 
+            loss_v = (((targetQ >= V).int() * tau * (targetQ - V).pow(2) + (targetQ < V).int() * (1 - tau) * (targetQ - V).pow(2)) * isterminal).sum() / n_nonterminal
 
-        logs = {k: v for k, v in locals().items() if k in ['loss', 'loss_v', 'loss_q', 'loss_cql', 'loss_awac']}
-        logs['lr'] = scheduler.get_last_lr()[0]
-        logs['batch_time'] = time() - batch_time
-        logs['forward_time'] = forward_time
-        logs['backward_time'] = backward_time
-        batch_time = time()
+            if config['two_qs']:
+                loss_cql_q1 = (F.cross_entropy(qs[0][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+                loss_cql_q2 = (F.cross_entropy(qs[1][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+                loss_cql = loss_cql_q1 + loss_cql_q2
+            else:
+                loss_cql = (F.cross_entropy(qs[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
 
-        if (n_opt_steps + 1) % steps_for_eval == 0:
-            model.eval()
-            _, stats = data.eval(logs, model, target_q_heads, betas=config['inference_betas'])
-            model.train()
-            tbar.set_postfix(stats)
-            # accelerator.save_state(f'stash/state-{task.lower()}')
+            loss_awac = (F.cross_entropy(logits[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
 
-        if not config.get('debug', False):
-            accelerator.log(logs)
+            loss = loss_q + loss_v + cql_scale * loss_cql + awac_scale * loss_awac
 
-    accelerator.wait_for_everyone()
-    model.eval()
-    target = data.eval({}, model, target_q_heads, betas=[1])[0]
+            backward_time = time()
+            accelerator.backward(loss)
+            backward_time = time() - backward_time
 
-    if not config.get('debug', False):
-        accelerator.log({'target': target})
+            opt.step()
+            scheduler.step()
+            opt.zero_grad()
+            n_opt_steps += 1
+
+            tokens_per_sec = tokens.numel() * world_size / (time() - batch_time)
+            tbar.set_description(f'{loss_q=:.1f} {loss_v=:.2f} {loss_awac=:.1f} {backward_time=:.1f} {tokens_per_sec=:.2f}')
+            tbar.update()
+
+            if (n_opt_steps + 1) % config['steps_for_target_q_sync'] == 0:
+                accelerator.unwrap_model(model).sync_target_q_heads(alpha)
+
+            logs.update({k: v for k, v in locals().items() if k in ['loss', 'loss_v', 'loss_q', 'loss_cql', 'loss_awac']})
+            logs['lr'] = scheduler.get_last_lr()[0]
+            logs['forward_time'] = forward_time
+            logs['backward_time'] = backward_time
+            logs['target_sum'] = check_weights(accelerator.unwrap_model(model).target_q1_head)
+            logs['batch_time'] = time() - batch_time
+
+            if not config.get('debug', False):
+                accelerator.log(logs)
 
     return model, data
 
