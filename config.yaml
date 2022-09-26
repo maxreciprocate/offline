@@ -22,8 +22,8 @@ RandomWalks:
 Sentiments:
   lr: 0.0006
   opt_betas: [0.9, 0.95]
-  batch_size: 32
-  tau: 0.7
+  batch_size: 6
+  tau: 0.5
   gamma: 0.99
   cql_scale: 0.1
   awac_scale: 1

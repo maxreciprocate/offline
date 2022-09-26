@@ -44,10 +44,14 @@ class QVModel(nn.Module):
 
         self.two_qs = two_qs
 
+        if hasattr(self.gpt.config, 'hidden_size'):
+            self.n_embd = self.gpt.config.hidden_size
+        else:
+            self.n_embd = self.gpt.config.n_embd
         self.vocab_size = self.gpt.config.vocab_size
-        self.n_embd = self.gpt.config.n_embd
 
         self.v_head = make_head(self.n_embd, 1)
+        self.lm_head = make_head(self.n_embd, self.vocab_size)
         self.q1_head = make_head(self.n_embd, self.vocab_size)
         self.target_q1_head = deepcopy(self.q1_head)
         self.target_q1_head.requires_grad_(False)
@@ -68,19 +72,15 @@ class QVModel(nn.Module):
             qs = self.q1_head(hs)
             target_qs = self.target_q1_head(hs)
 
-        return QVOutput((self.gpt.lm_head(hs), qs, target_qs, self.v_head(hs), out.past_key_values))
+        return QVOutput((self.lm_head(hs), qs, target_qs, self.v_head(hs), out.past_key_values))
 
     def _sync_target_q_heads(self, alpha):
-        print(f'sync {self.q1_head.state_dict()["0.weight"].sum()=}')
-
         for target_param, copy_param in zip(self.target_q1_head.parameters(), self.q1_head.parameters()):
             target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
 
         if self.two_qs:
             for target_param, copy_param in zip(self.target_q2_head.parameters(), self.q2_head.parameters()):
                 target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
-
-        print(f'sync {self.target_q1_head.state_dict()["0.weight"].sum()=}')
 
     def sync_target_q_heads(self, alpha):
         if os.environ.get('DEEPSPEED_ZERO_STAGE', '0') == '3':
