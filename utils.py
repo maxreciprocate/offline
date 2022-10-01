@@ -4,6 +4,7 @@ import torch as th
 from tqdm import tqdm
 import math
 from contextlib import contextmanager
+import torch.nn.functional as F
 from time import time
 import deepspeed
 
@@ -42,6 +43,38 @@ def batch_map(fn, xs, bsize: int, desc=None):
         out.extend(fn(batch))
 
     return out
+
+def load_tensors(name, texts, reward_model, tokenizer, max_length=64, use_cache=True):
+    cache_path = f'cache/{name}_{max_length=}_tokenizer={tokenizer.name_or_path.split("/")[-1]}.pt'
+    if use_cache and os.path.exists(cache_path):
+        tensors = th.load(cache_path)
+    else:
+        tensors = tokenizer(
+            [tokenizer.bos_token + x for x in texts],
+            max_length=max_length,
+            truncation=True,
+            padding=True,
+            return_tensors='pt'
+        )
+
+        trimmed_texts = tokenizer.batch_decode(tensors['input_ids'], skip_special_tokens=True)
+        rewards = th.as_tensor(reward_model(trimmed_texts))
+        rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-30)
+        rewards = rewards.view(-1, 1).repeat(1, tensors['input_ids'].shape[1])
+        rewards[tensors['attention_mask'].eq(0)] = 0
+
+        tensors['rewards'] = rewards
+        tensors['attention_mask'] = F.pad(tensors['attention_mask'], (0, 1), value=0)
+        tensors['input_ids'] = F.pad(tensors['input_ids'], (0, 1), value=tokenizer.eos_token_id)
+
+        if not os.path.exists(os.path.dirname(cache_path)):
+            os.mkdir(os.path.dirname(cache_path))
+
+        th.save(tensors, cache_path)
+
+    print(f"{tohuman(np.prod(tensors['input_ids'].shape))} tokens")
+    return tensors
+
 
 def isdelim(c: str):
     return c == '?' or c == '!' or c == '.' or c == ';'
