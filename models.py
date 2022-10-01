@@ -3,7 +3,9 @@ import torch as th
 import numpy as np
 from torch import tensor, nn
 import torch.nn.functional as F
+import transformers
 from transformers import AutoModelForCausalLM, PretrainedConfig, AutoConfig
+
 from typing import NamedTuple, Tuple, Union
 from copy import deepcopy
 from collections import defaultdict
@@ -26,23 +28,25 @@ class QVOutput(Tuple):
 
 def make_head(n_embd: int, out: int):
     return nn.Sequential(
-        nn.Linear(n_embd, n_embd * 4),
-        nn.GELU(),
-        nn.Linear(n_embd * 4, out)
+        nn.Linear(n_embd, n_embd * 2),
+        nn.ReLU(),
+        nn.Linear(n_embd * 2, out)
     )
 
 class QVModel(nn.Module):
-    def __init__(self, config: Union[PretrainedConfig, str], two_qs=True):
+    def __init__(self, config: Union[PretrainedConfig, str], params):
         super().__init__()
+
+        # enable zero3 init within from_pretrained
+        if os.environ.get('DEEPSPEED_ZERO_STAGE', '0') == '3':
+            config_path = os.environ.get('DEEPSPEED_CONFIG_FILE', '')
+            if config_path:
+                _hfconfig = transformers.deepspeed.HfDeepSpeedConfig(config_path)
 
         if isinstance(config, PretrainedConfig):
             self.gpt = AutoModelForCausalLM.from_config(config)
-        elif config == 'EleutherAI/gpt-j-6B':
-            self.gpt = AutoModelForCausalLM.from_pretrained(config, revision='float16', torch_dtype=th.bfloat16)
         else:
             self.gpt = AutoModelForCausalLM.from_pretrained(config)
-
-        self.two_qs = two_qs
 
         if hasattr(self.gpt.config, 'hidden_size'):
             self.n_embd = self.gpt.config.hidden_size
@@ -51,18 +55,28 @@ class QVModel(nn.Module):
         self.vocab_size = self.gpt.config.vocab_size
 
         self.v_head = make_head(self.n_embd, 1)
-        self.lm_head = make_head(self.n_embd, self.vocab_size)
         self.q1_head = make_head(self.n_embd, self.vocab_size)
         self.target_q1_head = deepcopy(self.q1_head)
         self.target_q1_head.requires_grad_(False)
 
-        if two_qs:
+        self.tau = params['tau']
+        self.alpha = params['alpha']
+        self.gamma = params['gamma']
+        self.awac_scale = params['awac_scale']
+        self.cql_scale = params['cql_scale']
+        self.two_qs = params['two_qs']
+
+        if self.two_qs:
             self.q2_head = make_head(self.n_embd, self.vocab_size)
             self.target_q2_head = deepcopy(self.q2_head)
             self.target_q2_head.requires_grad_(False)
 
     def forward(self, **x):
-        out = self.gpt.transformer(**x)
+        if hasattr(self.gpt, 'gpt_neox'):
+            out = self.gpt.gpt_neox(**x)
+        else:
+            out = self.gpt.transformer(**x)
+
         hs = out.last_hidden_state
 
         if self.two_qs:
@@ -72,7 +86,61 @@ class QVModel(nn.Module):
             qs = self.q1_head(hs)
             target_qs = self.target_q1_head(hs)
 
-        return QVOutput((self.lm_head(hs), qs, target_qs, self.v_head(hs), out.past_key_values))
+        if hasattr(self.gpt, 'gpt_neox'):
+            logits = self.gpt.embed_out(hs)
+        else:
+            logits = self.gpt.lm_head(hs)
+
+        return QVOutput((logits, qs, target_qs, self.v_head(hs), out.past_key_values))
+
+    def loss(self, batch):
+        tokens, attn, rewards = batch
+        actions = tokens[:, 1:, None]
+        isterminal = attn[:, :-1]
+
+        logits, qs, target_qs, vs, _ = self(input_ids=tokens, attention_mask=attn)
+        bsize, ntokens, dsize = logits.shape
+
+        if self.two_qs:
+            Q1 = qs[0][:, :-1].gather(-1, actions).squeeze(-1)
+            Q2 = qs[1][:, :-1].gather(-1, actions).squeeze(-1)
+
+            targetQ1 = target_qs[0][:, :-1].gather(-1, actions).squeeze(-1).detach()
+            targetQ2 = target_qs[1][:, :-1].gather(-1, actions).squeeze(-1).detach()
+            targetQ = th.minimum(targetQ1, targetQ2)
+        else:
+            Q = qs[:, :-1].gather(-1, actions).squeeze(-1)
+            targetQ = target_qs[:, :-1].gather(-1, actions).squeeze(-1).detach()
+
+        n_nonterminal = max(1, isterminal.sum())
+        V = vs[:, 1:].squeeze() * isterminal
+        Q_ = rewards + self.gamma * V
+
+        if self.two_qs:
+            loss_q1 = ((Q1 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+            loss_q2 = ((Q2 - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+            loss_q = loss_q1 + loss_q2
+        else:
+            loss_q = ((Q - Q_.detach()) * isterminal).pow(2).sum() / n_nonterminal
+
+        loss_v = (((targetQ >= V).int() * self.tau * (targetQ - V).pow(2) + (targetQ < V).int() * (1 - self.tau) * (targetQ - V).pow(2)) * isterminal).sum() / n_nonterminal
+
+        if self.two_qs:
+            loss_cql_q1 = (F.cross_entropy(qs[0][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+            loss_cql_q2 = (F.cross_entropy(qs[1][:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+            loss_cql = loss_cql_q1 + loss_cql_q2
+        else:
+            loss_cql = (F.cross_entropy(qs[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+
+        loss_awac = (F.cross_entropy(logits[:, :-1].reshape(-1, dsize), actions.reshape(-1), reduction='none').reshape(bsize, ntokens-1) * isterminal).sum() / n_nonterminal
+
+        loss = loss_q + loss_v + self.cql_scale * loss_cql + self.awac_scale * loss_awac
+        stats = {
+            k: v for k, v in locals().items() if k in
+            ['loss', 'loss_v', 'loss_q', 'loss_cql', 'loss_awac']
+        }
+
+        return loss, stats
 
     def _sync_target_q_heads(self, alpha):
         for target_param, copy_param in zip(self.target_q1_head.parameters(), self.q1_head.parameters()):
@@ -82,7 +150,7 @@ class QVModel(nn.Module):
             for target_param, copy_param in zip(self.target_q2_head.parameters(), self.q2_head.parameters()):
                 target_param.data.copy_((alpha * copy_param.data) + (1.0 - alpha) * target_param.data)
 
-    def sync_target_q_heads(self, alpha):
+    def sync_target_q_heads(self):
         if os.environ.get('DEEPSPEED_ZERO_STAGE', '0') == '3':
             params = chain(self.q1_head.parameters(),
                            self.target_q1_head.parameters(),
@@ -91,9 +159,9 @@ class QVModel(nn.Module):
 
             with deepspeed.zero.GatheredParameters(list(params), modifier_rank=0):
                 if deepspeed.comm.get_rank() == 0:
-                    self._sync_target_q_heads(alpha)
+                    self._sync_target_q_heads(self.alpha)
         else:
-            self._sync_target_q_heads(alpha)
+            self._sync_target_q_heads(self.alpha)
 
     @th.inference_mode()
     def sample(self, query, beta=1, max_length=32, temperature=1, top_k=20, logit_mask=None, logs=True, eos_token_id=50256):

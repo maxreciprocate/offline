@@ -1,5 +1,6 @@
 compute_environment: LOCAL_MACHINE
 deepspeed_config:
+  deepspeed_config_file: zero3.json
   deepspeed_multinode_launcher: standard
   gradient_accumulation_steps: 1
   offload_optimizer_device: none
@@ -8,7 +9,7 @@ deepspeed_config:
   zero3_init_flag: false
   zero_stage: 3
 distributed_type: DEEPSPEED
-downcast_bf16: 'no'
+downcast_bf16: no
 fsdp_config: {}
 machine_rank: ???
 main_process_ip: ???
